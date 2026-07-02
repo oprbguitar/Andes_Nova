@@ -8,7 +8,7 @@ const steps = [
   },
   {
     title: "Análisis",
-    text: "Evaluamos brechas, duplicidades, tiempos, responsables, vencimientos y oportunidades de mejora.",
+    text: "Evaluamos brechas, duplicidades, tiempos, personas a cargo, vencimientos y oportunidades de mejora.",
     icon: PieChart,
   },
   {

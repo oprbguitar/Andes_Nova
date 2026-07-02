@@ -43,7 +43,7 @@ export function Hero() {
             </div>
             <div className="mt-4 rounded-lg bg-softWhite p-3">
               <div className="rounded-lg bg-white p-3 text-sm leading-6 text-navy shadow-sm">
-                Hola, soy AndesNova IA. ¿En qué puedo ayudarle hoy?
+                ¿Qué haces por aquí? Sé que estás buscando algo. Consúltame y te oriento.
               </div>
               <div className="mt-3 grid gap-2">
                 {["¿Qué servicio necesita mi empresa?", "Quiero ordenar mis contratos", "Necesito un chatbot documental"].map((item) => (

@@ -8,6 +8,9 @@ export function Packages() {
     <section id="paquetes" className="bg-softWhite px-4 pb-14 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <h2 className="font-display text-3xl font-bold text-navy">Paquetes y soluciones integrales</h2>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+          Cada solución se adapta al volumen documental, nivel de complejidad, riesgos y objetivos del cliente. Solicite una evaluación para recibir una propuesta ajustada a su caso.
+        </p>
         <div className="mt-6 grid gap-5 md:grid-cols-3">
           {packages.map((pack, index) => {
             const Icon = icons[index];
@@ -34,7 +37,12 @@ export function Packages() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-5 text-lg font-black text-tealDark">{pack.price}</p>
+                <a
+                  href="#contacto"
+                  className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-teal px-4 py-3 text-sm font-extrabold text-white transition hover:bg-tealDark"
+                >
+                  {pack.cta}
+                </a>
               </article>
             );
           })}

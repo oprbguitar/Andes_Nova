@@ -47,7 +47,7 @@ export const services: Service[] = [
     accent: "text-teal",
     leadArea: "Operaciones y Proyectos",
     supportAreas: ["Gerencia General", "Tecnología", "Recursos Humanos"],
-    deliverables: ["Mapa de procesos", "Matriz de responsables", "Indicadores", "Plan de mejora"],
+    deliverables: ["Mapa de procesos", "Matriz de roles", "Indicadores", "Plan de mejora"],
   },
   {
     id: "sst",

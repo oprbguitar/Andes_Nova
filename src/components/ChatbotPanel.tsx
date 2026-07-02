@@ -9,7 +9,10 @@ type Message = {
 
 export function ChatbotPanel() {
   const [messages, setMessages] = useState<Message[]>([
-    { from: "bot", text: "Hola, soy AndesNova IA. ¿En qué puedo ayudarle hoy?" },
+    {
+      from: "bot",
+      text: "Hola, soy AndesNova IA. Si estás buscando ordenar documentos, contratos, procesos, SST o reportes, puedo orientarte hacia el servicio adecuado.",
+    },
   ]);
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);

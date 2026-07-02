@@ -2,6 +2,7 @@ import { AreasSection } from "./components/AreasSection";
 import { ChatbotPanel } from "./components/ChatbotPanel";
 import { ClientsSection } from "./components/ClientsSection";
 import { FinalCTA } from "./components/FinalCTA";
+import { FloatingChatInvite } from "./components/FloatingChatInvite";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
@@ -24,6 +25,7 @@ export default function App() {
         <FinalCTA />
       </main>
       <Footer />
+      <FloatingChatInvite />
     </>
   );
 }

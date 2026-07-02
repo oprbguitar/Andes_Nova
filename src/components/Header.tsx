@@ -45,8 +45,8 @@ export function Header() {
           <button className="flex items-center gap-3 rounded-full py-1 pl-1 pr-2 text-left transition hover:bg-white/10">
             <UserCircle className="h-10 w-10 text-white" />
             <span>
-              <span className="block text-sm font-bold text-white">Hola, Carlos</span>
-              <span className="block text-xs text-white/60">Administrador</span>
+              <span className="block text-sm font-bold text-white">Área cliente</span>
+              <span className="block text-xs text-white/60">Consulta empresarial</span>
             </span>
             <ChevronDown className="h-4 w-4 text-white/70" />
           </button>

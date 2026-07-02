@@ -73,6 +73,71 @@ input {
   overflow: hidden;
 }
 
+@keyframes chatBounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  35% {
+    transform: translateY(-5px) rotate(-4deg);
+  }
+
+  70% {
+    transform: translateY(2px) rotate(3deg);
+  }
+}
+
+@keyframes softPulse {
+  0%,
+  100% {
+    box-shadow: 0 18px 45px rgba(15, 159, 154, 0.22);
+  }
+
+  50% {
+    box-shadow: 0 22px 60px rgba(15, 159, 154, 0.42);
+  }
+}
+
+@keyframes dotJump {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.chat-invite {
+  animation: softPulse 3.2s ease-in-out infinite;
+}
+
+.animate-chat-bounce {
+  animation: chatBounce 2.8s ease-in-out infinite;
+}
+
+.chat-dot {
+  display: inline-block;
+  height: 0.38rem;
+  width: 0.38rem;
+  border-radius: 9999px;
+  background: #0f9f9a;
+  animation: dotJump 1.2s ease-in-out infinite;
+}
+
+.chat-dot-delay-1 {
+  animation-delay: 0.18s;
+}
+
+.chat-dot-delay-2 {
+  animation-delay: 0.36s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

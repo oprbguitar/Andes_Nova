@@ -14,7 +14,7 @@ export const chatbotResponses: Record<string, string> = {
   "Necesito un chatbot documental":
     "Le recomendamos el paquete Empresa Digital con IA. Incluye repositorio documental, carga de documentos, chatbot, búsqueda asistida por IA, respuestas con fuentes y manual de uso.",
   "Deseo mejorar mis procesos":
-    "Le recomendamos Consultoría administrativa y mejora de procesos. Incluye levantamiento de procesos, mapa actual, mapa propuesto, matriz de responsables, indicadores y plan de mejora.",
+    "Le recomendamos Consultoría administrativa y mejora de procesos. Incluye levantamiento de procesos, mapa actual, mapa propuesto, matriz de roles, indicadores y plan de mejora.",
   "Necesito una matriz IPERC":
     "Le recomendamos el servicio de Seguridad y Salud en el Trabajo. Incluye diagnóstico SST, identificación de peligros, evaluación de riesgos, matriz IPERC, controles preventivos y formatos de inspección.",
 };

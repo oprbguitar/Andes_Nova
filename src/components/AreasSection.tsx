@@ -17,7 +17,7 @@ export function AreasSection() {
             {areas.map((area) => (
               <article key={area.name} className="rounded-lg border border-line bg-softWhite p-4 transition hover:border-teal/50 hover:bg-white hover:shadow-card">
                 <h3 className="font-extrabold text-navy">{area.name}</h3>
-                <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-tealDark">{area.responsible}</p>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-tealDark">Área especializada</p>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{area.role}</p>
               </article>
             ))}

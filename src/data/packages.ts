@@ -2,14 +2,14 @@ export const packages = [
   {
     name: "Esencial",
     subtitle: "Solución básica para ordenar y cumplir.",
-    price: "Desde S/ 1,490",
+    cta: "Solicitar evaluación",
     features: ["Diagnóstico inicial", "Inventario documental", "Recomendaciones básicas", "Informe ejecutivo"],
   },
   {
     name: "Profesional",
     badge: "RECOMENDADO",
     subtitle: "Gestión avanzada con automatización y reportes.",
-    price: "Desde S/ 2,990",
+    cta: "Consultar solución",
     featured: true,
     features: [
       "Matriz documental",
@@ -22,7 +22,7 @@ export const packages = [
   {
     name: "Empresarial",
     subtitle: "Solución integral y personalizada.",
-    price: "Cotización a medida",
+    cta: "Diseñar propuesta",
     features: [
       "Diagnóstico completo",
       "Implementación documental",
