@@ -29,7 +29,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build:github
 
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4

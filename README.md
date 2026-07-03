@@ -28,5 +28,8 @@ npm run dev
 ```bash
 npm run dev
 npm run build
+npm run build:github
 npm run preview
 ```
+
+Use `npm run build` para Vercel y `npm run build:github` para GitHub Pages.
