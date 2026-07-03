@@ -22,8 +22,8 @@ export function Footer() {
           <h3 className="font-extrabold">Contacto</h3>
           <ul className="mt-4 space-y-2 text-sm text-white/62">
             <li>
-              <a href="mailto:contacto@andesnova.demo" className="hover:text-white">
-                contacto@andesnova.demo
+              <a href="mailto:peru.labs.pe@gmail.com" className="hover:text-white">
+                peru.labs.pe@gmail.com
               </a>
             </li>
             <li>Lima, Perú</li>
