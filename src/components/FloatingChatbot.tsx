@@ -14,21 +14,31 @@ const floatingMessages = [
   "Ordena tu empresa con una consulta rápida.",
 ];
 
+const botAnimations = ["bot-bounce", "bot-glow", "bot-wiggle", "bot-float", "bot-pulse"];
+
 const initialMessage =
   "Hola, soy AndesNova IA. Puedo orientarte sobre gestión documental, contratos, procesos, SST, logística, reportes o soluciones con IA. ¿Qué necesitas resolver?";
 
 export function FloatingChatbot() {
   const [open, setOpen] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
+  const [botAnimation, setBotAnimation] = useState(botAnimations[0]);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([{ from: "bot", text: initialMessage }]);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
+    const messageTimer = window.setInterval(() => {
       setMessageIndex((current) => (current + 1) % floatingMessages.length);
     }, 4500);
+    const animationTimer = window.setInterval(() => {
+      const next = botAnimations[Math.floor(Math.random() * botAnimations.length)];
+      setBotAnimation(next);
+    }, 3200);
 
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearInterval(messageTimer);
+      window.clearInterval(animationTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -61,7 +71,7 @@ export function FloatingChatbot() {
   };
 
   return (
-    <div id="ia" className="fixed bottom-5 right-4 z-[80] sm:bottom-7 sm:right-7">
+    <div id="ia" className="fixed bottom-5 right-4 z-[90] sm:bottom-7 sm:right-7">
       {open && (
         <section className="mb-4 w-[min(calc(100vw-2rem),390px)] overflow-hidden rounded-2xl border border-white/15 bg-[#0b233d] shadow-premium">
           <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
@@ -141,18 +151,22 @@ export function FloatingChatbot() {
         aria-label={open ? "Ocultar asistente AndesNova IA" : "Abrir asistente AndesNova IA"}
       >
         {!open && (
-          <span className="hidden max-w-[260px] rounded-2xl border border-white/20 bg-navy/95 px-4 py-3 text-sm font-semibold leading-5 text-white shadow-premium backdrop-blur-md transition group-hover:-translate-y-1 sm:block">
+          <span className="hidden max-w-[280px] rounded-2xl border border-white/20 bg-navyDark/95 px-4 py-3 text-sm font-semibold leading-5 text-white shadow-premium backdrop-blur-md transition group-hover:-translate-y-1 sm:block">
             {floatingMessages[messageIndex]}
           </span>
         )}
 
-        <span className="relative grid h-14 w-14 shrink-0 place-items-center rounded-full bg-teal text-white shadow-premium transition group-hover:-translate-y-1 group-hover:bg-tealDark sm:h-16 sm:w-16">
+        <span
+          className={`relative grid h-14 w-14 shrink-0 place-items-center rounded-full bg-teal text-white shadow-premium transition group-hover:-translate-y-1 group-hover:bg-tealDark sm:h-16 sm:w-16 ${botAnimation}`}
+        >
+          <span className="bot-ring absolute inset-0 rounded-full bg-teal/30" />
+          <span className="bot-ring-delay absolute inset-0 rounded-full bg-gold/25" />
           <span className="absolute inset-0 rounded-full bg-teal/40 blur-xl" />
-          <span className="absolute -right-1 -top-1 grid h-6 w-6 place-items-center rounded-full bg-gold text-[10px] font-black text-white">
+          <span className="absolute -right-1 -top-1 z-20 grid h-6 w-6 place-items-center rounded-full bg-gold text-[10px] font-black text-white">
             IA
           </span>
-          {open ? <X className="relative h-7 w-7" /> : <Bot className="animate-chat-bounce relative h-7 w-7 sm:h-8 sm:w-8" />}
-          {!open && <MessageCircle className="absolute -bottom-1 -left-1 h-5 w-5 rounded-full bg-white p-1 text-teal" />}
+          {open ? <X className="relative z-10 h-7 w-7" /> : <Bot className="relative z-10 h-7 w-7 sm:h-8 sm:w-8" />}
+          {!open && <MessageCircle className="absolute -bottom-1 -left-1 z-20 h-5 w-5 rounded-full bg-white p-1 text-teal" />}
         </span>
       </button>
     </div>

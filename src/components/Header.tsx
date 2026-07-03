@@ -1,38 +1,70 @@
 import { Bell, ChevronDown, Menu, UserCircle, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
 const navItems = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Servicios", href: "#servicios" },
-  { label: "Soluciones", href: "#paquetes" },
-  { label: "Recursos", href: "#areas" },
-  { label: "Nosotros", href: "#clientes" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Inicio", href: "#inicio", id: "inicio" },
+  { label: "Servicios", href: "#servicios", id: "servicios" },
+  { label: "Soluciones", href: "#paquetes", id: "paquetes" },
+  { label: "Recursos", href: "#areas", id: "areas" },
+  { label: "Nosotros", href: "#clientes", id: "clientes" },
+  { label: "Contacto", href: "#contacto", id: "contacto" },
 ];
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("inicio");
+
+  useEffect(() => {
+    const sections = navItems
+      .map((item) => document.getElementById(item.id))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target?.id) {
+          setActiveSection(visible.target.id);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-30% 0px -55% 0px",
+        threshold: [0.12, 0.25, 0.5],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-navyDark/92 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-navyDark shadow-premium">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <a href="#inicio" className="flex items-center gap-2" aria-label="Ir al inicio">
           <Logo />
         </a>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Navegación principal">
-          {navItems.map((item, index) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={`text-sm font-semibold text-white/80 transition hover:text-white ${
-                index === 0 ? "border-b-2 border-gold pb-2 text-white" : ""
-              }`}
-            >
-              {item.label}
-            </a>
-          ))}
+        <nav className="hidden items-center gap-2 lg:flex" aria-label="Navegación principal">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                  isActive ? "bg-gold text-navyDark shadow-md shadow-gold/25" : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-5 lg:flex">
@@ -63,18 +95,24 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-white/10 bg-navy px-4 py-4 lg:hidden">
+        <div className="border-t border-white/10 bg-navyDark px-4 py-4 shadow-premium lg:hidden">
           <nav className="grid gap-2" aria-label="Navegación móvil">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-3 text-sm font-semibold text-white/80 hover:bg-white/10"
-              >
-                {item.label}
-              </a>
-            ))}
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
+                    isActive ? "bg-gold text-navyDark" : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
           </nav>
         </div>
       )}
