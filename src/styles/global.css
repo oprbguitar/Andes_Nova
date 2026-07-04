@@ -505,6 +505,7 @@ input:focus-visible {
 }
 
 .home-screen > .assistant-panel {
+  grid-column: 3;
   grid-row: 1 / -1;
 }
 
