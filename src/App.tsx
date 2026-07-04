@@ -1,29 +1,69 @@
-import { AreasSection } from "./components/AreasSection";
-import { ClientsSection } from "./components/ClientsSection";
-import { FinalCTA } from "./components/FinalCTA";
-import { FloatingChatbot } from "./components/FloatingChatbot";
-import { Footer } from "./components/Footer";
+import { AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "./components/Header";
-import { Hero } from "./components/Hero";
-import { Packages } from "./components/Packages";
-import { ServicesGrid } from "./components/ServicesGrid";
-import { WorkProcess } from "./components/WorkProcess";
+import { HomeView } from "./components/HomeView";
+import { RouteView } from "./components/RouteView";
+import { companyData } from "./data/companyData";
+import { validateCompanyData } from "./utils/validateCompanyData";
+
+type View = "Inicio" | "Ruta";
 
 export default function App() {
+  const data = useMemo(() => validateCompanyData(companyData), []);
+  const [activeView, setActiveView] = useState<View>(() =>
+    window.location.hash.toLowerCase().includes("ruta") ? "Ruta" : "Inicio",
+  );
+  const [selectedAreaId, setSelectedAreaId] = useState<string | undefined>();
+  const selectedArea = data.areas.find((area) => area.id === selectedAreaId);
+
+  function navigate(view: View) {
+    setActiveView(view);
+    setSelectedAreaId(undefined);
+    window.history.replaceState(null, "", view === "Ruta" ? "#ruta" : "#inicio");
+  }
+
+  useEffect(() => {
+    function syncHash() {
+      setActiveView(window.location.hash.toLowerCase().includes("ruta") ? "Ruta" : "Inicio");
+      setSelectedAreaId(undefined);
+    }
+
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
+
   return (
-    <>
-      <Header />
-      <main>
-        <Hero />
-        <ServicesGrid />
-        <WorkProcess />
-        <Packages />
-        <AreasSection />
-        <ClientsSection />
-        <FinalCTA />
-      </main>
-      <Footer />
-      <FloatingChatbot />
-    </>
+    <main className="page-shell">
+      <div className="app-card">
+        <Header
+          activeView={activeView}
+          onNavigate={navigate}
+          companyName={data.companyName}
+          navigation={data.navigation}
+        />
+        <AnimatePresence mode="wait">
+          {activeView === "Inicio" ? (
+            <HomeView
+              key="home"
+              areas={data.areas}
+              kpis={data.kpis}
+              assistant={data.assistant}
+              selectedArea={selectedArea}
+              onSelectArea={setSelectedAreaId}
+              onRoute={() => navigate("Ruta")}
+            />
+          ) : (
+            <RouteView
+              key="route"
+              areas={data.areas}
+              routeSteps={data.routeSteps}
+              assistant={data.assistant}
+              selectedArea={selectedArea}
+              onSelectArea={setSelectedAreaId}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </main>
   );
 }

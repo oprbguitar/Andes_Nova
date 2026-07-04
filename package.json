@@ -1,16 +1,16 @@
 {
-  "name": "andesnova",
+  "name": "andes-nova-evaluation-portal",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:github": "cross-env-shell GITHUB_PAGES=true \"tsc -b && vite build\"",
     "preview": "vite preview"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
+    "framer-motion": "latest",
     "lucide-react": "latest",
     "react": "latest",
     "react-dom": "latest",
@@ -20,10 +20,6 @@
   "devDependencies": {
     "@types/node": "^26.1.0",
     "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "autoprefixer": "^10.4.20",
-    "cross-env": "^10.1.0",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17"
+    "@types/react-dom": "latest"
   }
 }
