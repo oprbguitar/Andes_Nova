@@ -26,6 +26,8 @@ export function EvaluationNode({ area, className = "", active, compact, number, 
     <motion.button
       className={`evaluation-node tone-${area.statusKey} ${compact ? "compact" : ""} ${active ? "selected" : ""} ${className}`}
       type="button"
+      aria-label={`${area.title}: ${area.status}`}
+      aria-expanded={active}
       onClick={() => onSelect(area.id)}
       onKeyDown={onKeyDown}
       whileHover={{ y: -6, scale: 1.02 }}

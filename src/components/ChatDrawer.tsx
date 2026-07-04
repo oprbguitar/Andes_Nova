@@ -11,9 +11,11 @@ type Message = {
 export function ChatDrawer({
   prompts,
   selectedAreaId,
+  closedLabel = "Abrir guía",
 }: {
   prompts: string[];
   selectedAreaId?: string;
+  closedLabel?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -36,7 +38,7 @@ export function ChatDrawer({
   return (
     <div className={`chat-drawer ${open ? "open" : ""}`}>
       <button className="chat-toggle" type="button" onClick={() => setOpen((value) => !value)}>
-        {open ? "Cerrar guía" : "Abrir guía"}
+        {open ? "Cerrar guía" : closedLabel}
       </button>
       <div className="prompt-list">
         {prompts.map((prompt) => (

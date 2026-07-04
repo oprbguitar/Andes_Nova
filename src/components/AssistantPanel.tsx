@@ -3,6 +3,7 @@ import type { EvaluationArea } from "../data/companyData";
 import { ChatDrawer } from "./ChatDrawer";
 
 type AssistantPanelProps = {
+  className?: string;
   mode: "home" | "route";
   title: string;
   subtitle: string;
@@ -19,6 +20,7 @@ const suggestionIcons = [ShieldCheck, FileText, CirclePlus];
 const priorityIcons = [ShieldCheck, Settings, FileText];
 
 export function AssistantPanel({
+  className = "",
   mode,
   title,
   subtitle,
@@ -33,7 +35,7 @@ export function AssistantPanel({
   const priorities = routePriorities.length ? routePriorities : [];
 
   return (
-    <aside className="assistant-panel">
+    <aside className={`assistant-panel ${className}`}>
       <div className="mascot-wrap" aria-hidden="true">
         <div className="mascot">
           <span className="helmet" />
