@@ -1453,7 +1453,7 @@ input:focus-visible {
   .route-mobile-assistant {
     position: relative;
     display: grid;
-    grid-template-columns: 58px minmax(0, 1fr);
+    grid-template-columns: 96px minmax(0, 1fr);
     align-items: center;
     gap: 12px;
     padding: 14px;
@@ -1461,14 +1461,15 @@ input:focus-visible {
   }
 
   .route-mobile-mascot {
-    width: 58px;
+    width: 96px;
     height: 52px;
     display: grid;
-    place-items: center;
+    place-items: center start;
   }
 
   .route-mobile-mascot .mascot {
     transform: scale(0.55);
+    transform-origin: left center;
     animation-duration: 6s;
   }
 
@@ -1717,7 +1718,7 @@ input:focus-visible {
   }
 
   .route-mobile-assistant {
-    grid-template-columns: 54px 1fr;
+    grid-template-columns: 86px minmax(0, 1fr);
   }
 
   .route-mobile-assistant .chat-drawer {
