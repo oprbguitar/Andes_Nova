@@ -1,4 +1,4 @@
-import { Bot, MessageCircle, Send, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 type Message = {
@@ -18,13 +18,13 @@ type SuggestionChip = {
 };
 
 const floatingMessages = [
-  "¿Qué haces por aquí? Sé que estás buscando algo.",
-  "Consúltame sobre documentos, contratos o procesos.",
-  "Puedo ayudarte a elegir el servicio adecuado.",
-  "Ordena tu empresa con una consulta rápida.",
+  "Sé lo que buscas.",
+  "Te he visto antes por aquí.",
+  "¿Buscas una ruta clara?",
+  "Puedo ayudarte a entender Andes Nova.",
+  "Pregúntame por documentación, riesgos u operaciones.",
+  "¿Quieres revisar procesos?",
 ];
-
-const botAnimations = ["bot-bounce", "bot-glow", "bot-wiggle", "bot-float", "bot-pulse"];
 
 const chatEndpoint = "https://andesnova-chat-api.vercel.app/api/chat";
 
@@ -86,9 +86,9 @@ const toApiHistory = (messages: Message[]): ApiMessage[] =>
 
 function TypingIndicator() {
   return (
-    <div className="mr-12 inline-flex items-center gap-2 rounded-2xl bg-white px-3 py-2 text-xs font-semibold text-slate-500 shadow-sm">
+    <div className="floating-chat-typing">
       <span>{loadingMessage}</span>
-      <span className="flex gap-1" aria-hidden="true">
+      <span className="floating-chat-typing-dots" aria-hidden="true">
         <span className="chat-dot" />
         <span className="chat-dot chat-dot-delay-1" />
         <span className="chat-dot chat-dot-delay-2" />
@@ -100,7 +100,6 @@ function TypingIndicator() {
 export function FloatingChatbot() {
   const [open, setOpen] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
-  const [botAnimation, setBotAnimation] = useState(botAnimations[0]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [showMoreTopics, setShowMoreTopics] = useState(false);
@@ -110,15 +109,10 @@ export function FloatingChatbot() {
   useEffect(() => {
     const messageTimer = window.setInterval(() => {
       setMessageIndex((current) => (current + 1) % floatingMessages.length);
-    }, 4500);
-    const animationTimer = window.setInterval(() => {
-      const next = botAnimations[Math.floor(Math.random() * botAnimations.length)];
-      setBotAnimation(next);
-    }, 3200);
+    }, 5200);
 
     return () => {
       window.clearInterval(messageTimer);
-      window.clearInterval(animationTimer);
     };
   }, []);
 
@@ -209,42 +203,38 @@ export function FloatingChatbot() {
   const visibleSuggestions = showMoreTopics ? [...primarySuggestions, ...moreSuggestions] : primarySuggestions;
 
   return (
-    <div id="ia" className="fixed bottom-5 right-4 z-[90] sm:bottom-7 sm:right-7">
+    <div id="ia" className={`chatbot-floating ${open ? "chatbot-open" : ""}`}>
       {open && (
-        <section className="mb-4 flex max-h-[80vh] w-[min(calc(100vw-2rem),410px)] flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0b233d] shadow-premium">
-          <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3">
-            <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-full bg-white text-teal">
-                <Bot className="h-6 w-6" />
+        <section className="floating-chat-panel" aria-label="Chatbot AndesNova IA">
+          <div className="floating-chat-header">
+            <div className="floating-chat-title">
+              <div className="floating-chat-avatar" aria-hidden="true">
+                <BotHelmetFace compact />
               </div>
               <div>
-                <h2 className="font-bold text-white">AndesNova IA+</h2>
-                <p className="text-xs text-white/65">Asistente empresarial</p>
+                <h2>AndesNova IA+</h2>
+                <p>Asistente empresarial</p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-full p-2 text-white/75 transition hover:bg-white/10 hover:text-white"
+              className="floating-chat-close"
               aria-label="Cerrar asistente"
             >
-              <X className="h-5 w-5" />
+              <X size={20} />
             </button>
           </div>
 
-          <div className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-softWhite p-3">
+          <div className="floating-chat-messages">
             {messages.map((message, index) =>
               message.loading ? (
                 <TypingIndicator key={`${message.from}-${index}`} />
               ) : (
                 <div
                   key={`${message.from}-${index}`}
-                  className={`whitespace-pre-line rounded-2xl px-3.5 py-3 text-sm leading-6 shadow-sm ${
-                    message.from === "bot"
-                      ? "mr-10 bg-white text-navy"
-                      : "ml-10 bg-teal text-white"
-                  }`}
+                  className={`floating-chat-message ${message.from === "bot" ? "bot" : "user"}`}
                 >
                   {message.text}
                 </div>
@@ -252,15 +242,15 @@ export function FloatingChatbot() {
             )}
 
             {!hasUserMessage && (
-              <div className="space-y-2">
-                <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">
+              <div className="floating-chat-suggestions">
+                <div className="floating-chat-chip-row">
                   {visibleSuggestions.map((suggestion) => (
                     <button
                       key={suggestion.label}
                       type="button"
                       onClick={() => chooseSuggestion(suggestion)}
                       disabled={loading}
-                      className="shrink-0 rounded-full border border-teal/35 bg-white px-3 py-1.5 text-xs font-bold text-tealDark transition hover:bg-teal hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
+                      className="floating-chat-chip"
                     >
                       {suggestion.label}
                     </button>
@@ -269,7 +259,7 @@ export function FloatingChatbot() {
                 <button
                   type="button"
                   onClick={() => setShowMoreTopics((value) => !value)}
-                  className="text-xs font-bold text-tealDark transition hover:text-teal"
+                  className="floating-chat-more"
                 >
                   {showMoreTopics ? "Ver menos temas" : "Ver más temas"}
                 </button>
@@ -279,39 +269,39 @@ export function FloatingChatbot() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="shrink-0 border-t border-white/10 bg-[#0b233d] px-3 pt-3">
-            <div className="mb-2 flex flex-wrap gap-2">
+          <div className="floating-chat-composer">
+            <div className="floating-chat-actions">
               {contactActions.map((action) => (
                 <button
                   key={action}
                   type="button"
                   onClick={scrollToContact}
-                  className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold text-white/75 transition hover:border-gold/60 hover:text-gold"
+                  className="floating-chat-action"
                 >
                   {action}
                 </button>
               ))}
             </div>
 
-            <form onSubmit={submit} className="flex gap-2 pb-3">
+            <form onSubmit={submit} className="floating-chat-form">
               <input
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
-                className="min-w-0 flex-1 rounded-full border border-white/10 bg-white px-4 py-3 text-sm text-navy outline-none focus:ring-2 focus:ring-teal"
+                className="floating-chat-input"
                 placeholder="Describe tu caso o consulta..."
                 aria-label="Describe tu caso o consulta"
               />
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="grid h-12 w-12 place-items-center rounded-full bg-teal text-white transition hover:bg-tealDark disabled:cursor-not-allowed disabled:opacity-55"
+                className="floating-chat-send"
                 aria-label={loading ? "Esperando respuesta" : "Enviar consulta"}
               >
-                <Send className="h-5 w-5" />
+                <Send size={19} />
               </button>
             </form>
 
-            <p className="pb-3 text-xs text-white/45">Orientado con documentación interna de AndesNova.</p>
+            <p>Orientado con documentación interna de AndesNova.</p>
           </div>
         </section>
       )}
@@ -319,28 +309,42 @@ export function FloatingChatbot() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="chat-invite group flex items-end gap-3 text-left"
+        className="chatbot-floating-launcher"
         aria-label={open ? "Ocultar asistente AndesNova IA" : "Abrir asistente AndesNova IA"}
       >
         {!open && (
-          <span className="hidden max-w-[280px] rounded-2xl border border-white/20 bg-navyDark/95 px-4 py-3 text-sm font-semibold leading-5 text-white shadow-premium backdrop-blur-md transition group-hover:-translate-y-1 sm:block">
+          <span className="chatbot-floating-hint" key={messageIndex}>
             {floatingMessages[messageIndex]}
           </span>
         )}
 
-        <span
-          className={`relative grid h-14 w-14 shrink-0 place-items-center rounded-full bg-teal text-white shadow-premium transition group-hover:-translate-y-1 group-hover:bg-tealDark sm:h-16 sm:w-16 ${botAnimation}`}
-        >
-          <span className="bot-ring absolute inset-0 rounded-full bg-teal/30" />
-          <span className="bot-ring-delay absolute inset-0 rounded-full bg-gold/25" />
-          <span className="absolute inset-0 rounded-full bg-teal/40 blur-xl" />
-          <span className="absolute -right-1 -top-1 z-20 grid h-6 w-6 place-items-center rounded-full bg-gold text-[10px] font-black text-white">
-            IA
-          </span>
-          {open ? <X className="relative z-10 h-7 w-7" /> : <Bot className="relative z-10 h-7 w-7 sm:h-8 sm:w-8" />}
-          {!open && <MessageCircle className="absolute -bottom-1 -left-1 z-20 h-5 w-5 rounded-full bg-white p-1 text-teal" />}
+        <span className="chatbot-floating-orb">
+          {open ? <X className="chatbot-orb-close" size={28} /> : <BotHelmetFace />}
+          {!open && <span className="chatbot-online-dot" aria-hidden="true" />}
         </span>
       </button>
     </div>
+  );
+}
+
+function BotHelmetFace({ compact = false }: { compact?: boolean }) {
+  return (
+    <svg className={compact ? "bot-helmet-face compact" : "bot-helmet-face"} viewBox="0 0 96 96" aria-hidden="true">
+      <defs>
+        <linearGradient id="orbFace" x1="24" x2="72" y1="34" y2="74">
+          <stop offset="0" stopColor="#17467a" />
+          <stop offset="1" stopColor="#061642" />
+        </linearGradient>
+      </defs>
+      <path className="bot-helmet-shell" d="M18 49c0-18 13-32 30-32s30 14 30 32v9H18z" />
+      <path className="bot-helmet-brim" d="M16 54c7 4 18 6 32 6s25-2 32-6v8c-8 5-19 7-32 7s-24-2-32-7z" />
+      <path className="bot-helmet-ridge" d="M48 17v39" />
+      <rect className="bot-face-panel" x="23" y="37" width="50" height="35" rx="18" />
+      <path className="bot-eye left" d="M38 53c0-5 3-8 7-8s7 3 7 8" />
+      <path className="bot-eye right" d="M55 53c0-5 3-8 7-8s7 3 7 8" />
+      <path className="bot-smile" d="M40 62c5 4 11 4 16 0" />
+      <path className="bot-ear left" d="M18 48h-5c-3 0-5 3-5 8s2 8 5 8h5" />
+      <path className="bot-ear right" d="M78 48h5c3 0 5 3 5 8s-2 8-5 8h-5" />
+    </svg>
   );
 }

@@ -1,6 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { Header } from "./components/Header";
+import { FloatingChatbot } from "./components/FloatingChatbot";
 import { HomeView } from "./components/HomeView";
 import { RouteView } from "./components/RouteView";
 import { companyData } from "./data/companyData";
@@ -64,6 +65,7 @@ export default function App() {
           )}
         </AnimatePresence>
       </div>
+      <FloatingChatbot />
     </main>
   );
 }
