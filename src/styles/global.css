@@ -1001,6 +1001,24 @@ input:focus-visible {
   }
 }
 
+@media (max-height: 820px) and (min-width: 921px) {
+  .chat-drawer {
+    display: none;
+  }
+
+  .assistant-status {
+    padding: 0 22px;
+  }
+
+  .assistant-panel {
+    height: min(100%, 710px);
+  }
+
+  .mascot-wrap {
+    height: 92px;
+  }
+}
+
 @media (max-width: 920px) {
   body {
     overflow: auto;
