@@ -1450,7 +1450,7 @@ input:focus-visible {
   .route-mobile-assistant {
     position: relative;
     display: grid;
-    grid-template-columns: 68px 1fr auto;
+    grid-template-columns: 58px minmax(0, 1fr);
     align-items: center;
     gap: 12px;
     padding: 14px;
@@ -1495,12 +1495,14 @@ input:focus-visible {
   .route-mobile-assistant .chat-drawer {
     position: static;
     display: block;
+    grid-column: 1 / -1;
     width: auto;
     margin: 0;
     z-index: 20;
   }
 
   .route-mobile-assistant .chat-toggle {
+    width: 100%;
     min-width: 86px;
     height: 42px;
     padding: 0 12px;
