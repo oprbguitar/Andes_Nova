@@ -1086,6 +1086,7 @@ input:focus-visible {
     height: auto;
     min-height: calc(100vh - 16px);
     overflow: visible;
+    border-radius: 22px;
   }
 
   .app-header {
@@ -1110,10 +1111,16 @@ input:focus-visible {
   .route-screen {
     height: auto;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
     padding: 24px 18px;
     gap: 24px;
     overflow: hidden;
+  }
+
+  .home-screen > .assistant-panel {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .home-copy {
@@ -1127,13 +1134,22 @@ input:focus-visible {
 
   .home-visual,
   .route-canvas {
-    min-height: 520px;
+    width: 100%;
+    min-height: 500px;
+    margin: 0;
+    transform: none;
   }
 
   .assistant-panel {
+    width: min(100%, 620px);
     height: auto;
-    max-height: 720px;
-    overflow: auto;
+    max-height: none;
+    justify-self: center;
+    overflow: visible;
+  }
+
+  .node-popover {
+    display: none;
   }
 
   .kpi-row {
@@ -1143,6 +1159,17 @@ input:focus-visible {
 }
 
 @media (max-width: 560px) {
+  .page-shell {
+    padding: 0;
+  }
+
+  .app-card {
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    border-inline: 0;
+  }
+
   .brand {
     font-size: 24px;
   }
@@ -1154,12 +1181,51 @@ input:focus-visible {
 
   .home-visual,
   .route-canvas {
-    min-height: 470px;
-    width: 116%;
-    margin-left: -8%;
-    transform: scale(0.82);
+    min-height: 390px;
+    width: 100%;
+    margin-left: 0;
+    transform: none;
     transform-origin: top center;
-    margin-bottom: -60px;
+    margin-bottom: 0;
+  }
+
+  .home-visual {
+    min-height: 430px;
+  }
+
+  .building-illustration {
+    width: 112%;
+    max-height: 58%;
+  }
+
+  .node-icon {
+    width: 54px;
+    height: 54px;
+  }
+
+  .node-base {
+    left: 3%;
+    top: 52%;
+  }
+
+  .node-docs {
+    left: 9%;
+    top: 17%;
+  }
+
+  .node-operation {
+    left: 43%;
+    top: 4%;
+  }
+
+  .node-risks {
+    right: 3%;
+    top: 28%;
+  }
+
+  .node-clients {
+    right: 0;
+    top: 57%;
   }
 
   .home-copy h1 {
@@ -1179,8 +1245,23 @@ input:focus-visible {
     max-width: 280px;
   }
 
+  .assistant-panel {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .suggestion-list button {
+    min-width: 0;
+  }
+
   .kpi-row {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .kpi-card {
+    min-height: 100px;
+    padding: 18px;
   }
 
   .node-card {
