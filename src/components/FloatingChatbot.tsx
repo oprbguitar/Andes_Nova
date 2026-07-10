@@ -101,7 +101,11 @@ function TypingIndicator() {
   );
 }
 
-export function FloatingChatbot() {
+type FloatingChatbotProps = {
+  onRequestContact: () => void;
+};
+
+export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
   const [open, setOpen] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
   const [input, setInput] = useState("");
@@ -170,12 +174,6 @@ export function FloatingChatbot() {
     }
   }, [messages, open, showMoreTopics]);
 
-  const scrollToContact = () => {
-    document.getElementById("contacto")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
 
   const sendMessage = async (userMessage: string) => {
     if (loading) return;
@@ -311,7 +309,7 @@ export function FloatingChatbot() {
                 <button
                   key={action}
                   type="button"
-                  onClick={scrollToContact}
+                  onClick={onRequestContact}
                   className="floating-chat-action"
                 >
                   {action}

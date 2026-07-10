@@ -25,7 +25,7 @@ export default function App() {
         />
       </div>
       <ContactModal open={contactOpen} contact={data.contact} onClose={() => setContactOpen(false)} />
-      <FloatingChatbot />
+      <FloatingChatbot onRequestContact={() => setContactOpen(true)} />
     </main>
   );
 }
