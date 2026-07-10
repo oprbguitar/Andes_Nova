@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 type Message = {
   from: "bot" | "user";
   text: string;
+  sources?: string[];
   loading?: boolean;
 };
 
@@ -101,7 +102,11 @@ function loadStoredMessages(): Message[] {
             typeof (item as Message).text === "string",
         )
       ) {
-        return (parsed as Message[]).map(({ from, text }) => ({ from, text }));
+        return (parsed as Message[]).map(({ from, text, sources }) => ({
+          from,
+          text,
+          sources: Array.isArray(sources) ? sources.filter((s) => typeof s === "string") : undefined,
+        }));
       }
     }
   } catch {
@@ -116,7 +121,7 @@ function storeMessages(messages: Message[]) {
     const persistable = messages
       .filter((message) => !message.loading)
       .slice(-maxStoredMessages)
-      .map(({ from, text }) => ({ from, text }));
+      .map(({ from, text, sources }) => ({ from, text, sources }));
     sessionStorage.setItem(chatStorageKey, JSON.stringify(persistable));
   } catch {
     // storage full or unavailable: keep the chat working without persistence
@@ -260,11 +265,14 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
         throw new Error(`Chat request failed with ${response.status}`);
       }
 
-      const data = (await response.json()) as { answer?: unknown };
+      const data = (await response.json()) as { answer?: unknown; sources?: unknown };
       const answer = typeof data.answer === "string" && data.answer.trim() ? data.answer : errorMessage;
+      const sources = Array.isArray(data.sources)
+        ? data.sources.filter((s): s is string => typeof s === "string").slice(0, 3)
+        : undefined;
 
       setMessages((current) =>
-        current.map((message) => (message.loading ? { from: "bot", text: answer } : message)),
+        current.map((message) => (message.loading ? { from: "bot", text: answer, sources } : message)),
       );
     } catch {
       setMessages((current) =>
@@ -326,6 +334,9 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
                   className={`floating-chat-message ${message.from === "bot" ? "bot" : "user"}`}
                 >
                   {message.text}
+                  {message.from === "bot" && message.sources?.length ? (
+                    <span className="floating-chat-sources">Basado en: {message.sources.join(" · ")}</span>
+                  ) : null}
                 </div>
               ),
             )}
