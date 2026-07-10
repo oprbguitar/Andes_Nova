@@ -18,12 +18,16 @@ type SuggestionChip = {
 };
 
 const floatingMessages = [
-  "Sé lo que buscas.",
-  "Te he visto antes por aquí.",
+  "Hola 👋",
+  "¿Qué necesitas?",
+  "¿Te ayudo con algo?",
+  "Consulta gratis aquí 💬",
   "¿Buscas una ruta clara?",
-  "Puedo ayudarte a entender Andes Nova.",
+  "Tu evaluación puede empezar hoy 🚀",
+  "¿Dudas? Escríbeme",
   "Pregúntame por documentación, riesgos u operaciones.",
-  "¿Quieres revisar procesos?",
+  "¿Quieres ordenar tu empresa?",
+  "Estoy en línea ahora 🟢",
 ];
 
 const chatEndpoint = "https://andesnova-chat-api.vercel.app/api/chat";
@@ -104,15 +108,47 @@ export function FloatingChatbot() {
   const [loading, setLoading] = useState(false);
   const [showMoreTopics, setShowMoreTopics] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{ from: "bot", text: initialMessage }]);
+  const [orbEffect, setOrbEffect] = useState<"jump" | "glow" | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const messageTimer = window.setInterval(() => {
-      setMessageIndex((current) => (current + 1) % floatingMessages.length);
-    }, 5200);
+    let messageTimer: number;
 
+    const scheduleNext = () => {
+      messageTimer = window.setTimeout(() => {
+        setMessageIndex((current) => {
+          let next = Math.floor(Math.random() * floatingMessages.length);
+          if (next === current) {
+            next = (next + 1) % floatingMessages.length;
+          }
+          return next;
+        });
+        scheduleNext();
+      }, 4200 + Math.random() * 3600);
+    };
+
+    scheduleNext();
+    return () => window.clearTimeout(messageTimer);
+  }, []);
+
+  useEffect(() => {
+    let startTimer: number;
+    let stopTimer: number;
+
+    const scheduleEffect = () => {
+      startTimer = window.setTimeout(() => {
+        setOrbEffect(Math.random() < 0.5 ? "jump" : "glow");
+        stopTimer = window.setTimeout(() => {
+          setOrbEffect(null);
+          scheduleEffect();
+        }, 1400);
+      }, 2400 + Math.random() * 4200);
+    };
+
+    scheduleEffect();
     return () => {
-      window.clearInterval(messageTimer);
+      window.clearTimeout(startTimer);
+      window.clearTimeout(stopTimer);
     };
   }, []);
 
@@ -318,7 +354,7 @@ export function FloatingChatbot() {
           </span>
         )}
 
-        <span className="chatbot-floating-orb">
+        <span className={`chatbot-floating-orb ${!open && orbEffect ? `orb-${orbEffect}` : ""}`}>
           {open ? <X className="chatbot-orb-close" size={28} /> : <BotHelmetFace />}
           {!open && <span className="chatbot-online-dot" aria-hidden="true" />}
         </span>
