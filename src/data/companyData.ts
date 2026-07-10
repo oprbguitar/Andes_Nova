@@ -36,7 +36,6 @@ export const companyData = {
   companyName: "AndesNova",
   navigation: ["Inicio"],
   contact: {
-    name: "Pierre R.",
     email: "peru.labs.pe@gmail.com",
   },
   assistant: {

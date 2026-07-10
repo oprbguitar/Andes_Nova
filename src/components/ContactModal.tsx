@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 type ContactModalProps = {
   open: boolean;
-  contact: { name: string; email: string };
+  contact: { email: string };
   onClose: () => void;
 };
 
@@ -66,9 +66,7 @@ export function ContactModal({ open, contact, onClose }: ContactModalProps) {
               <Mail size={26} />
             </span>
             <h2>Inicia tu evaluación</h2>
-            <p>
-              Escríbenos y coordinamos tu evaluación empresarial. Consultas a <strong>{contact.name}</strong>:
-            </p>
+            <p>Escríbenos y coordinamos tu evaluación empresarial:</p>
             <a className="contact-email" href={`mailto:${contact.email}?subject=Consulta%20AndesNova`}>
               {contact.email}
             </a>
