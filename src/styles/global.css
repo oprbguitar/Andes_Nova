@@ -19,6 +19,7 @@
   --assistant-width: 346px;
   --building-scale: 1;
   --header-height: 108px;
+  --footer-height: 54px;
   --safe-padding: clamp(28px, 3vw, 56px);
 }
 
@@ -108,6 +109,24 @@ input:focus-visible {
   letter-spacing: 0;
   text-decoration: none;
   color: #fff;
+}
+
+.brand-copy {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-copy strong {
+  font: inherit;
+}
+
+.brand-copy em {
+  font-family: "Segoe Script", "Brush Script MT", cursive;
+  font-size: clamp(15px, 1.25vw, 24px);
+  font-weight: 400;
+  white-space: nowrap;
 }
 
 .header-contact {
@@ -230,8 +249,20 @@ input:focus-visible {
 }
 
 .screen {
-  height: calc(100% - var(--header-height));
+  height: calc(100% - var(--header-height) - var(--footer-height));
   position: relative;
+}
+
+.app-footer {
+  height: var(--footer-height);
+  display: grid;
+  place-items: center;
+  padding: 8px clamp(24px, 3vw, 56px);
+  color: #dce8f7;
+  background: #07142b;
+  font-size: clamp(11px, 0.8vw, 13px);
+  line-height: 1.35;
+  text-align: center;
 }
 
 .home-screen {
@@ -990,8 +1021,39 @@ input:focus-visible {
   height: 14px;
   border: 3px solid #fff;
   border-radius: 50%;
+  background: #d9a21b;
+  box-shadow: 0 0 0 6px rgba(217, 162, 27, 0.12);
+}
+
+.chatbot-online-dot.status-available,
+.chat-service-status.status-available > span {
   background: var(--green);
-  box-shadow: 0 0 0 6px rgba(32, 168, 74, 0.12);
+}
+
+.chatbot-online-dot.status-fallback,
+.chatbot-online-dot.status-checking,
+.chat-service-status.status-fallback > span,
+.chat-service-status.status-checking > span {
+  background: #f2bd32;
+}
+
+.chatbot-online-dot.status-unavailable,
+.chat-service-status.status-unavailable > span {
+  background: #e05252;
+}
+
+.chat-service-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-service-status > span {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
 }
 
 .bot-helmet-face {
@@ -2568,8 +2630,51 @@ input:focus-visible {
     --route-gap: 16px;
     --assistant-width: 100%;
     --building-scale: 0.58;
-    --header-height: 112px;
+    --header-height: 126px;
+    --footer-height: 70px;
     --safe-padding: clamp(14px, 4vw, 20px);
+  }
+
+  .app-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 0 14px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand-mark {
+    transform: scale(0.78);
+    transform-origin: left center;
+    margin-right: -8px;
+  }
+
+  .brand-copy {
+    flex-wrap: wrap;
+    gap: 2px 7px;
+  }
+
+  .brand-copy strong {
+    font-size: 23px;
+  }
+
+  .brand-copy em {
+    flex-basis: 100%;
+    font-size: 13px;
+    white-space: normal;
+  }
+
+  .header-contact-copy {
+    display: none;
+  }
+
+  .header-contact {
+    min-height: 46px;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .chatbot-floating {

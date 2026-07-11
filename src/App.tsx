@@ -31,6 +31,9 @@ export default function App() {
           onSelectArea={setSelectedAreaId}
           onStartEvaluation={() => setWizardOpen(true)}
         />
+        <footer className="app-footer">
+          Atención de proyectos previa evaluación. Los servicios especializados pueden desarrollarse mediante profesionales y empresas colaboradoras.
+        </footer>
       </div>
       <EvaluationWizard
         open={wizardOpen}

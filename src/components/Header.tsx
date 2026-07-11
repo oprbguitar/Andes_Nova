@@ -12,7 +12,11 @@ export function Header({ companyName, contact }: HeaderProps) {
         <span className="brand-mark" aria-hidden="true">
           <span />
         </span>
-        <span>{companyName}</span>
+        <span className="brand-copy">
+          <strong>{companyName}</strong>
+          <span aria-hidden="true">|</span>
+          <em>Soluciones de gestión e inteligencia documental</em>
+        </span>
       </a>
 
       <a className="header-contact" href={`mailto:${contact.email}`}>

@@ -31,6 +31,8 @@ type SuggestionChip = {
   message: string;
 };
 
+type ServiceStatus = "checking" | "available" | "fallback" | "unavailable";
+
 const floatingMessages = [
   "Hola 👋",
   "¿Qué necesitas?",
@@ -41,10 +43,17 @@ const floatingMessages = [
   "¿Dudas? Escríbeme",
   "Pregúntame por documentación, riesgos u operaciones.",
   "¿Quieres ordenar tu empresa?",
-  "Estoy en línea ahora 🟢",
 ];
 
 const chatEndpoint = "https://andesnova-chat-api.vercel.app/api/chat";
+const healthEndpoint = "https://andesnova-chat-api.vercel.app/api/health";
+
+const serviceStatusLabels: Record<ServiceStatus, string> = {
+  checking: "Comprobando servicio",
+  available: "Servicio disponible",
+  fallback: "Respuesta local de respaldo",
+  unavailable: "Temporalmente no disponible",
+};
 
 const primarySuggestions: SuggestionChip[] = [
   {
@@ -215,9 +224,34 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
   const [messages, setMessages] = useState<Message[]>(loadStoredMessages);
   const [orbEffect, setOrbEffect] = useState<"jump" | "glow" | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [serviceStatus, setServiceStatus] = useState<ServiceStatus>("checking");
   const messagesBoxRef = useRef<HTMLDivElement | null>(null);
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 5000);
+    setServiceStatus("checking");
+
+    void fetch(healthEndpoint, { signal: controller.signal, cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Health check failed");
+        const data = (await response.json()) as { status?: unknown };
+        setServiceStatus(
+          data.status === "available" ? "available" : data.status === "fallback" ? "fallback" : "unavailable",
+        );
+      })
+      .catch(() => setServiceStatus("unavailable"))
+      .finally(() => window.clearTimeout(timeout));
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [open]);
 
   useEffect(() => {
     let messageTimer: number;
@@ -434,7 +468,9 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
               </div>
               <div>
                 <h2>AndesNova IA+</h2>
-                <p>Asistente empresarial</p>
+                <p className={`chat-service-status status-${serviceStatus}`}>
+                  <span aria-hidden="true" /> {serviceStatusLabels[serviceStatus]}
+                </p>
               </div>
             </div>
 
@@ -623,7 +659,7 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
 
         <span className={`chatbot-floating-orb ${!open && orbEffect ? `orb-${orbEffect}` : ""}`}>
           {open ? <X className="chatbot-orb-close" size={28} /> : <BotHelmetFace />}
-          {!open && <span className="chatbot-online-dot" aria-hidden="true" />}
+          {!open && <span className={`chatbot-online-dot status-${serviceStatus}`} aria-hidden="true" />}
         </span>
       </button>
     </div>

@@ -1,6 +1,6 @@
 # AndesNova
 
-Portal corporativo demo para AndesNova Consultores S.A.C., construido con React, Vite, TypeScript, Tailwind CSS y Lucide React.
+Portal corporativo de AndesNova, construido con React, Vite, TypeScript, Framer Motion y Lucide React.
 
 ## Demo en GitHub Pages
 

@@ -33,12 +33,15 @@ export function Footer() {
         <div>
           <h3 className="font-extrabold">Legal</h3>
           <ul className="mt-4 space-y-2 text-sm text-white/62">
-            <li>Empresa ficticia para demo</li>
+            <li>Atención de proyectos previa evaluación.</li>
             <li>Política de privacidad</li>
             <li>Términos de uso</li>
           </ul>
         </div>
       </div>
+      <p className="mx-auto mt-8 max-w-7xl border-t border-white/10 pt-6 text-sm text-white/62">
+        Los servicios especializados pueden desarrollarse mediante profesionales y empresas colaboradoras.
+      </p>
     </footer>
   );
 }
