@@ -32,10 +32,9 @@ export function HomeView({ areas, kpis, selectedArea, onSelectArea, onStartEvalu
         <button className="primary-action" type="button" onClick={onStartEvaluation}>
           Iniciar evaluación <ArrowRight size={24} />
         </button>
-        <button className="demo-note" type="button" onClick={onStartEvaluation}>
-          <span aria-hidden="true">✦</span> El diagrama es un ejemplo ilustrativo: obtén el diagnóstico real de tu
-          empresa
-        </button>
+        <p className="demo-note">
+          <span aria-hidden="true">✦</span> El diagrama muestra un ejemplo ilustrativo de un diagnóstico terminado.
+        </p>
       </div>
 
       <div className="home-visual">
