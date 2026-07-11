@@ -11,7 +11,7 @@ export function FinalCTA() {
           Solicite una evaluación inicial y descubra qué servicio se adapta mejor a sus documentos, procesos, contratos, proveedores y objetivos.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <a href="mailto:peru.labs.pe@gmail.com" className="btn-primary">
+          <a href="mailto:consultas@andesnova.solutions" className="btn-primary">
             Solicitar evaluación inicial
             <ArrowRight className="h-5 w-5" />
           </a>

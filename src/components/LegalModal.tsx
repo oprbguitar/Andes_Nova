@@ -17,7 +17,7 @@ const tabs: Array<{ id: LegalSection; label: string }> = [
 ];
 
 const lastUpdated = "11 de julio de 2026";
-const contactEmail = "peru.labs.pe@gmail.com";
+const contactEmail = "consultas@andesnova.solutions";
 
 function PrivacyContent() {
   return (
