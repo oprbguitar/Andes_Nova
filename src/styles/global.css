@@ -3256,3 +3256,146 @@ input:focus-visible {
   opacity: 0.5;
   cursor: default;
 }
+
+/* Lead form (contact modal) */
+
+.lead-modal {
+  width: min(560px, 100%);
+  max-height: min(92dvh, 820px);
+  overflow-y: auto;
+}
+
+.lead-form {
+  margin-top: 4px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lead-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 560px) {
+  .lead-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lead-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font: inherit;
+  resize: vertical;
+  min-height: 74px;
+}
+
+.lead-form textarea:focus-visible {
+  outline: 3px solid rgba(11, 92, 255, 0.28);
+  outline-offset: 1px;
+}
+
+.lead-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lead-consent input {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blue);
+  flex-shrink: 0;
+}
+
+.lead-modal .contact-actions {
+  margin-top: 2px;
+}
+
+.lead-modal .contact-send:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.lead-error {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 122, 24, 0.1);
+  border: 1px solid rgba(255, 122, 24, 0.3);
+  color: #a24d05;
+  font-size: 13px;
+  text-align: left;
+}
+
+.lead-alt {
+  margin: 14px auto 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.lead-alt a {
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.lead-success h2 {
+  margin-top: 18px;
+}
+
+.lead-success .contact-send {
+  margin: 6px auto 0;
+}
+
+/* Demo badge on home visual */
+
+.demo-badge {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border: 1px solid rgba(11, 92, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 26px rgba(18, 42, 82, 0.1);
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.demo-badge span {
+  color: var(--blue);
+}
+
+.demo-badge:hover {
+  color: var(--blue);
+  border-color: rgba(11, 92, 255, 0.45);
+}
+
+@media (max-width: 760px) {
+  .demo-badge {
+    white-space: normal;
+    text-align: center;
+    max-width: 92%;
+  }
+}
