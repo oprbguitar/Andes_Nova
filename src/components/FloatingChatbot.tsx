@@ -1,10 +1,23 @@
-import { Send, X } from "lucide-react";
+import { Check, Copy, Download, RotateCcw, Send, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+
+type SourceInfo = {
+  title: string;
+  category?: string;
+  updated?: string;
+  description?: string;
+};
+
+type MessageStatus = "offline" | "limit" | "error";
 
 type Message = {
   from: "bot" | "user";
   text: string;
-  sources?: string[];
+  kind?: "answer";
+  sources?: SourceInfo[];
+  status?: MessageStatus;
+  retryText?: string;
+  feedback?: "up" | "down";
   loading?: boolean;
 };
 
@@ -35,12 +48,12 @@ const chatEndpoint = "https://andesnova-chat-api.vercel.app/api/chat";
 
 const primarySuggestions: SuggestionChip[] = [
   {
-    label: "Ordenar documentos",
-    message: "Quiero ordenar los documentos de mi empresa. ¿Por dónde debería empezar?",
+    label: "Chatbot documental",
+    message: "Quiero un chatbot documental para consultar archivos internos. ¿Qué pasos recomienda?",
   },
   {
-    label: "Revisar contratos",
-    message: "Tengo contratos desordenados y quiero controlar vencimientos y obligaciones. ¿Qué me recomienda?",
+    label: "Capacitación",
+    message: "Necesito capacitación para mi equipo en procesos, documentación o SST. ¿Qué enfoque recomienda?",
   },
   {
     label: "Mejorar procesos",
@@ -49,6 +62,14 @@ const primarySuggestions: SuggestionChip[] = [
 ];
 
 const moreSuggestions: SuggestionChip[] = [
+  {
+    label: "Ordenar documentos",
+    message: "Quiero ordenar los documentos de mi empresa. ¿Por dónde debería empezar?",
+  },
+  {
+    label: "Revisar contratos",
+    message: "Tengo contratos desordenados y quiero controlar vencimientos y obligaciones. ¿Qué me recomienda?",
+  },
   {
     label: "SST",
     message: "Necesito apoyo en SST para ordenar documentación, controles e IPERC. ¿Cómo debería empezar?",
@@ -61,30 +82,59 @@ const moreSuggestions: SuggestionChip[] = [
     label: "Dashboards",
     message: "Necesito reportes o dashboards para controlar mejor la gestión. ¿Qué información debería preparar?",
   },
-  {
-    label: "Chatbot documental",
-    message: "Quiero un chatbot documental para consultar archivos internos. ¿Qué pasos recomienda?",
-  },
-  {
-    label: "Capacitación",
-    message: "Necesito capacitación para mi equipo en procesos, documentación o SST. ¿Qué enfoque recomienda?",
-  },
 ];
-
-const contactActions = ["Solicitar evaluación", "Contactar especialista"];
 
 const initialMessage =
   "Hola, soy AndesNova IA+. Puedo orientarte sobre documentos, contratos, procesos, SST, logística, reportes o soluciones con IA. Cuéntame brevemente qué necesitas resolver.";
 
-const loadingMessage = "IA escribiendo";
+const loadingMessage = "Procesando consulta";
 
-const errorMessage = "Ahora mismo no puedo procesar la consulta. Puede intentar nuevamente o solicitar una evaluación inicial.";
+const errorMessage =
+  "Ahora mismo no puedo procesar la consulta. Puedes reintentarlo o solicitar una evaluación inicial.";
+
+const offlineMessage =
+  "Parece que no hay conexión a internet. Revisa tu red y vuelve a intentarlo.";
 
 const rateLimitMessage =
-  "Has enviado varias consultas seguidas. Espera un momento e inténtalo de nuevo; mientras tanto puedo orientarte con los temas sugeridos.";
+  "Has enviado varias consultas seguidas. Espera un minuto e inténtalo de nuevo; mientras tanto puedo orientarte con los temas sugeridos.";
+
+const statusLabels: Record<MessageStatus, string> = {
+  offline: "Sin conexión",
+  limit: "Límite alcanzado",
+  error: "No disponible",
+};
 
 const chatStorageKey = "andesnova-chat-messages";
 const maxStoredMessages = 30;
+
+function normalizeSources(raw: unknown): SourceInfo[] | undefined {
+  if (!Array.isArray(raw)) {
+    return undefined;
+  }
+
+  const sources = raw
+    .map((item): SourceInfo | null => {
+      if (typeof item === "string") {
+        return { title: item };
+      }
+
+      if (item && typeof item === "object" && typeof (item as SourceInfo).title === "string") {
+        const source = item as SourceInfo;
+        return {
+          title: source.title,
+          category: typeof source.category === "string" ? source.category : undefined,
+          updated: typeof source.updated === "string" ? source.updated : undefined,
+          description: typeof source.description === "string" ? source.description : undefined,
+        };
+      }
+
+      return null;
+    })
+    .filter((item): item is SourceInfo => item !== null)
+    .slice(0, 3);
+
+  return sources.length ? sources : undefined;
+}
 
 function loadStoredMessages(): Message[] {
   try {
@@ -102,10 +152,12 @@ function loadStoredMessages(): Message[] {
             typeof (item as Message).text === "string",
         )
       ) {
-        return (parsed as Message[]).map(({ from, text, sources }) => ({
+        return (parsed as Message[]).map(({ from, text, kind, sources, feedback }) => ({
           from,
           text,
-          sources: Array.isArray(sources) ? sources.filter((s) => typeof s === "string") : undefined,
+          kind: kind === "answer" ? kind : undefined,
+          sources: normalizeSources(sources),
+          feedback: feedback === "up" || feedback === "down" ? feedback : undefined,
         }));
       }
     }
@@ -119,9 +171,9 @@ function loadStoredMessages(): Message[] {
 function storeMessages(messages: Message[]) {
   try {
     const persistable = messages
-      .filter((message) => !message.loading)
+      .filter((message) => !message.loading && !message.status)
       .slice(-maxStoredMessages)
-      .map(({ from, text, sources }) => ({ from, text, sources }));
+      .map(({ from, text, kind, sources, feedback }) => ({ from, text, kind, sources, feedback }));
     sessionStorage.setItem(chatStorageKey, JSON.stringify(persistable));
   } catch {
     // storage full or unavailable: keep the chat working without persistence
@@ -130,7 +182,7 @@ function storeMessages(messages: Message[]) {
 
 const toApiHistory = (messages: Message[]): ApiMessage[] =>
   messages
-    .filter((message) => !message.loading)
+    .filter((message) => !message.loading && !message.status)
     .map((message) => ({
       role: message.from === "bot" ? ("assistant" as const) : ("user" as const),
       content: message.text,
@@ -151,7 +203,7 @@ function TypingIndicator() {
 }
 
 type FloatingChatbotProps = {
-  onRequestContact: () => void;
+  onRequestContact: (summary?: string) => void;
 };
 
 export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
@@ -162,6 +214,9 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
   const [showMoreTopics, setShowMoreTopics] = useState(false);
   const [messages, setMessages] = useState<Message[]>(loadStoredMessages);
   const [orbEffect, setOrbEffect] = useState<"jump" | "glow" | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const messagesBoxRef = useRef<HTMLDivElement | null>(null);
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -218,7 +273,16 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
   }, []);
 
   useEffect(() => {
-    if (open) {
+    if (!open) {
+      return;
+    }
+
+    const box = messagesBoxRef.current;
+    const last = messages[messages.length - 1];
+
+    if (last?.from === "bot" && !last.loading && lastMessageRef.current && box) {
+      box.scrollTo({ top: Math.max(lastMessageRef.current.offsetTop - 10, 0), behavior: "smooth" });
+    } else {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   }, [messages, open, showMoreTopics]);
@@ -227,20 +291,23 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
     storeMessages(messages);
   }, [messages]);
 
-
-  const sendMessage = async (userMessage: string) => {
+  const sendMessage = async (userMessage: string, options?: { isRetry?: boolean }) => {
     if (loading) return;
 
     setLoading(true);
 
-    const userEntry: Message = { from: "user", text: userMessage };
     const waitingEntry: Message = { from: "bot", text: loadingMessage, loading: true };
     let history: ApiMessage[] = [];
 
     setMessages((current) => {
       history = toApiHistory(current);
-      return [...current, userEntry, waitingEntry];
+      const next = options?.isRetry ? [...current] : [...current, { from: "user", text: userMessage } as Message];
+      return [...next, waitingEntry];
     });
+
+    const replaceLoading = (entry: Message) => {
+      setMessages((current) => current.map((message) => (message.loading ? entry : message)));
+    };
 
     try {
       const response = await fetch(chatEndpoint, {
@@ -255,9 +322,7 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
       });
 
       if (response.status === 429) {
-        setMessages((current) =>
-          current.map((message) => (message.loading ? { from: "bot", text: rateLimitMessage } : message)),
-        );
+        replaceLoading({ from: "bot", text: rateLimitMessage, status: "limit", retryText: userMessage });
         return;
       }
 
@@ -267,20 +332,79 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
 
       const data = (await response.json()) as { answer?: unknown; sources?: unknown };
       const answer = typeof data.answer === "string" && data.answer.trim() ? data.answer : errorMessage;
-      const sources = Array.isArray(data.sources)
-        ? data.sources.filter((s): s is string => typeof s === "string").slice(0, 3)
-        : undefined;
 
-      setMessages((current) =>
-        current.map((message) => (message.loading ? { from: "bot", text: answer, sources } : message)),
-      );
-    } catch {
-      setMessages((current) =>
-        current.map((message) => (message.loading ? { from: "bot", text: errorMessage } : message)),
-      );
+      replaceLoading({ from: "bot", text: answer, kind: "answer", sources: normalizeSources(data.sources) });
+    } catch (error) {
+      const offline =
+        (typeof navigator !== "undefined" && !navigator.onLine) || error instanceof TypeError;
+
+      replaceLoading({
+        from: "bot",
+        text: offline ? offlineMessage : errorMessage,
+        status: offline ? "offline" : "error",
+        retryText: userMessage,
+      });
     } finally {
       setLoading(false);
     }
+  };
+
+  const retryMessage = (failed: Message) => {
+    if (!failed.retryText || loading) return;
+    const retryText = failed.retryText;
+    setMessages((current) => current.filter((message) => message !== failed));
+    void sendMessage(retryText, { isRetry: true });
+  };
+
+  const setFeedback = (target: Message, feedback: "up" | "down") => {
+    setMessages((current) =>
+      current.map((message) => (message === target ? { ...message, feedback } : message)),
+    );
+  };
+
+  const copyAnswer = async (target: Message, index: number) => {
+    try {
+      await navigator.clipboard.writeText(target.text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch {
+      setCopiedIndex(null);
+    }
+  };
+
+  const downloadAnswer = (target: Message) => {
+    const sourceLines = target.sources?.length
+      ? `\n\nBasado en: ${target.sources.map((source) => source.title).join(", ")}`
+      : "";
+    const blob = new Blob([`Recomendación AndesNova IA+\n\n${target.text}${sourceLines}\n`], {
+      type: "text/plain;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "recomendacion-andesnova.txt";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const buildCaseSummary = () => {
+    const userTexts = messages
+      .filter((message) => message.from === "user")
+      .slice(-4)
+      .map((message) => `- ${message.text}`);
+    const lastAnswer = [...messages].reverse().find((message) => message.kind === "answer");
+
+    if (!userTexts.length && !lastAnswer) {
+      return undefined;
+    }
+
+    return [
+      "Resumen del caso (chat AndesNova):",
+      userTexts.length ? `Consultas:\n${userTexts.join("\n")}` : "",
+      lastAnswer ? `Recomendación del asistente:\n${lastAnswer.text}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n\n");
   };
 
   const chooseSuggestion = (suggestion: SuggestionChip) => {
@@ -324,22 +448,101 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
             </button>
           </div>
 
-          <div className="floating-chat-messages">
-            {messages.map((message, index) =>
-              message.loading ? (
-                <TypingIndicator key={`${message.from}-${index}`} />
-              ) : (
+          <div className="floating-chat-messages" ref={messagesBoxRef}>
+            {messages.map((message, index) => {
+              if (message.loading) {
+                return <TypingIndicator key={`${message.from}-${index}`} />;
+              }
+
+              const isLast = index === messages.length - 1;
+
+              return (
                 <div
                   key={`${message.from}-${index}`}
-                  className={`floating-chat-message ${message.from === "bot" ? "bot" : "user"}`}
+                  ref={isLast ? lastMessageRef : undefined}
+                  className={`floating-chat-message ${message.from === "bot" ? "bot" : "user"} ${
+                    message.status ? `status-${message.status}` : ""
+                  }`}
                 >
+                  {message.status ? (
+                    <span className={`floating-chat-status-tag tag-${message.status}`}>
+                      {statusLabels[message.status]}
+                    </span>
+                  ) : null}
                   {message.text}
+                  {message.status && message.retryText && message.status !== "limit" ? (
+                    <button
+                      type="button"
+                      className="floating-chat-retry"
+                      onClick={() => retryMessage(message)}
+                      disabled={loading}
+                    >
+                      <RotateCcw size={14} /> Reintentar
+                    </button>
+                  ) : null}
                   {message.from === "bot" && message.sources?.length ? (
-                    <span className="floating-chat-sources">Basado en: {message.sources.join(" · ")}</span>
+                    <span className="floating-chat-sources">
+                      <span className="floating-chat-sources-label">Basado en:</span>
+                      {message.sources.map((source) => (
+                        <details className="floating-chat-source" key={source.title}>
+                          <summary>
+                            {source.title}
+                            {source.updated ? <small>{source.updated}</small> : null}
+                          </summary>
+                          {source.category ? <em>{source.category}</em> : null}
+                          {source.description ? <p>{source.description}</p> : null}
+                        </details>
+                      ))}
+                    </span>
+                  ) : null}
+                  {message.kind === "answer" ? (
+                    <span className="floating-chat-tools">
+                      <span className="floating-chat-feedback">
+                        {message.feedback ? (
+                          "¡Gracias por tu opinión!"
+                        ) : (
+                          <>
+                            ¿Te resultó útil?
+                            <button
+                              type="button"
+                              aria-label="Sí, fue útil"
+                              onClick={() => setFeedback(message, "up")}
+                            >
+                              <ThumbsUp size={14} />
+                            </button>
+                            <button
+                              type="button"
+                              aria-label="No fue útil"
+                              onClick={() => setFeedback(message, "down")}
+                            >
+                              <ThumbsDown size={14} />
+                            </button>
+                          </>
+                        )}
+                      </span>
+                      <span className="floating-chat-tool-buttons">
+                        <button
+                          type="button"
+                          aria-label="Copiar recomendación"
+                          title="Copiar"
+                          onClick={() => void copyAnswer(message, index)}
+                        >
+                          {copiedIndex === index ? <Check size={14} /> : <Copy size={14} />}
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="Descargar recomendación"
+                          title="Descargar"
+                          onClick={() => downloadAnswer(message)}
+                        >
+                          <Download size={14} />
+                        </button>
+                      </span>
+                    </span>
                   ) : null}
                 </div>
-              ),
-            )}
+              );
+            })}
 
             {!hasUserMessage && (
               <div className="floating-chat-suggestions">
@@ -371,16 +574,16 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
 
           <div className="floating-chat-composer">
             <div className="floating-chat-actions">
-              {contactActions.map((action) => (
-                <button
-                  key={action}
-                  type="button"
-                  onClick={onRequestContact}
-                  className="floating-chat-action"
-                >
-                  {action}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => onRequestContact(buildCaseSummary())}
+                className="floating-chat-action"
+              >
+                Solicitar evaluación
+              </button>
+              <button type="button" onClick={() => onRequestContact()} className="floating-chat-action">
+                Contactar especialista
+              </button>
             </div>
 
             <form onSubmit={submit} className="floating-chat-form">

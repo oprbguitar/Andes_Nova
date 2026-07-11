@@ -10,7 +10,13 @@ export default function App() {
   const data = useMemo(() => validateCompanyData(companyData), []);
   const [selectedAreaId, setSelectedAreaId] = useState<string | undefined>();
   const [contactOpen, setContactOpen] = useState(false);
+  const [contactSummary, setContactSummary] = useState<string | undefined>();
   const selectedArea = data.areas.find((area) => area.id === selectedAreaId);
+
+  function openContact(summary?: string) {
+    setContactSummary(summary);
+    setContactOpen(true);
+  }
 
   return (
     <main className="page-shell">
@@ -21,11 +27,16 @@ export default function App() {
           kpis={data.kpis}
           selectedArea={selectedArea}
           onSelectArea={setSelectedAreaId}
-          onStartEvaluation={() => setContactOpen(true)}
+          onStartEvaluation={() => openContact()}
         />
       </div>
-      <ContactModal open={contactOpen} contact={data.contact} onClose={() => setContactOpen(false)} />
-      <FloatingChatbot onRequestContact={() => setContactOpen(true)} />
+      <ContactModal
+        open={contactOpen}
+        contact={data.contact}
+        summary={contactSummary}
+        onClose={() => setContactOpen(false)}
+      />
+      <FloatingChatbot onRequestContact={openContact} />
     </main>
   );
 }

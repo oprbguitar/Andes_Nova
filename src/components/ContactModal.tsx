@@ -2,13 +2,20 @@ import { Check, Copy, Mail, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+function buildMailto(email: string, summary?: string) {
+  const subject = summary ? "Solicitud de evaluación - AndesNova" : "Consulta AndesNova";
+  const body = summary ? `&body=${encodeURIComponent(summary)}` : "";
+  return `mailto:${email}?subject=${encodeURIComponent(subject)}${body}`;
+}
+
 type ContactModalProps = {
   open: boolean;
   contact: { email: string };
+  summary?: string;
   onClose: () => void;
 };
 
-export function ContactModal({ open, contact, onClose }: ContactModalProps) {
+export function ContactModal({ open, contact, summary, onClose }: ContactModalProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -67,11 +74,14 @@ export function ContactModal({ open, contact, onClose }: ContactModalProps) {
             </span>
             <h2>Inicia tu evaluación</h2>
             <p>Escríbenos y coordinamos tu evaluación empresarial:</p>
-            <a className="contact-email" href={`mailto:${contact.email}?subject=Consulta%20AndesNova`}>
+            <a className="contact-email" href={buildMailto(contact.email, summary)}>
               {contact.email}
             </a>
+            {summary ? (
+              <p className="contact-summary-note">Se incluirá el resumen de tu consulta del chat en el correo.</p>
+            ) : null}
             <div className="contact-actions">
-              <a className="primary-action contact-send" href={`mailto:${contact.email}?subject=Consulta%20AndesNova`}>
+              <a className="primary-action contact-send" href={buildMailto(contact.email, summary)}>
                 Escribir correo <Mail size={19} />
               </a>
               <button className="contact-copy" type="button" onClick={copyEmail}>
