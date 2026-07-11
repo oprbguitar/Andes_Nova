@@ -2,7 +2,7 @@ import { Check, Copy, Mail, Send, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FormEvent, useEffect, useState } from "react";
 
-const leadEndpoint = "https://andesnova-chat-api.vercel.app/api/lead";
+const leadEndpoint = "https://formsubmit.co/ajax/consultas@andesnova.solutions";
 
 function buildMailto(email: string, summary?: string) {
   const subject = summary ? "Solicitud de evaluación - AndesNova" : "Consulta AndesNova";
@@ -79,13 +79,16 @@ export function ContactModal({ open, contact, summary, onClose }: ContactModalPr
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: form.name.trim(),
-          company: form.company.trim(),
+          _subject: `Nueva consulta AndesNova: ${form.name.trim()}`,
+          _template: "table",
+          _captcha: "false",
+          nombre: form.name.trim(),
+          empresa: form.company.trim() || "No indicada",
           email: form.email.trim(),
-          phone: form.phone.trim(),
-          message: form.message.trim(),
-          summary: summary || "",
-          consent: form.consent,
+          telefono: form.phone.trim() || "No indicado",
+          mensaje: form.message.trim() || "Sin mensaje adicional",
+          resumen: summary || "Sin diagnóstico adjunto",
+          consentimiento: "Aceptado",
         }),
       });
 
