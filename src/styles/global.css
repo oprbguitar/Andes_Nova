@@ -3359,27 +3359,3 @@ input:focus-visible {
   margin: 6px auto 0;
 }
 
-
-/* Demo note under the hero CTA */
-
-.demo-note {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 14px;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
-  text-align: left;
-  line-height: 1.4;
-
-}
-
-.demo-note span {
-  color: var(--blue);
-  flex-shrink: 0;
-}
-

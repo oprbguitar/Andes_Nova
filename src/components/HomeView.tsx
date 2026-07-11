@@ -26,15 +26,12 @@ export function HomeView({ areas, kpis, selectedArea, onSelectArea, onStartEvalu
     >
       <div className="home-copy">
         <h1>
-          Consultoría empresarial para ordenar <span>procesos, documentos y decisiones</span>
+          Ordena tus <span>procesos, documentos y decisiones</span>
         </h1>
         <p>Evalúa documentación, operación, riesgos y clientes para convertir problemas de gestión en acciones concretas.</p>
         <button className="primary-action" type="button" onClick={onStartEvaluation}>
           Iniciar evaluación <ArrowRight size={24} />
         </button>
-        <p className="demo-note">
-          <span aria-hidden="true">✦</span> El diagrama muestra un ejemplo ilustrativo de un diagnóstico terminado.
-        </p>
       </div>
 
       <div className="home-visual">
