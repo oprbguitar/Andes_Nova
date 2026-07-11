@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // GitHub Pages serves from /Andes_Nova/; Vercel serves from the domain root.
 const isVercel = Boolean(process.env.VERCEL);
 const base = isVercel ? "/" : "/Andes_Nova/";
-const siteUrl = isVercel ? "https://andesnova.vercel.app/" : "https://oprbguitar.github.io/Andes_Nova/";
+const siteUrl = isVercel ? "https://andesnova.solutions/" : "https://oprbguitar.github.io/Andes_Nova/";
 
 function seoFiles(): Plugin {
   const lastmod = new Date().toISOString().slice(0, 10);
