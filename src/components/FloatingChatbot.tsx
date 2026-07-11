@@ -1,5 +1,7 @@
-import { Check, Copy, Download, RotateCcw, Send, ThumbsDown, ThumbsUp, X } from "lucide-react";
+import { Check, Copy, Download, RotateCcw, Send, ThumbsDown, ThumbsUp, Trash2, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { downloadAnswerPdf } from "../utils/diagnosisPdf";
+import type { LegalSection } from "./LegalModal";
 
 type SourceInfo = {
   id?: string;
@@ -219,9 +221,10 @@ function TypingIndicator() {
 
 type FloatingChatbotProps = {
   onRequestContact: (summary?: string) => void;
+  onOpenLegal: (section: LegalSection) => void;
 };
 
-export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
+export function FloatingChatbot({ onRequestContact, onOpenLegal }: FloatingChatbotProps) {
   const [open, setOpen] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
   const [input, setInput] = useState("");
@@ -413,18 +416,10 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
   };
 
   const downloadAnswer = (target: Message) => {
-    const sourceLines = target.sources?.length
-      ? `\n\nEvidencia documental: ${target.sources.map((source) => `${source.title}${source.id ? ` [${source.id}]` : ""}`).join(", ")}`
-      : "";
-    const blob = new Blob([`Recomendación AndesNova IA+\n\n${target.text}${sourceLines}\n`], {
-      type: "text/plain;charset=utf-8",
+    void downloadAnswerPdf({
+      text: target.text,
+      sources: target.sources?.map((source) => ({ title: source.title, id: source.id })),
     });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "recomendacion-andesnova.txt";
-    link.click();
-    URL.revokeObjectURL(url);
   };
 
   const buildCaseSummary = () => {
@@ -445,6 +440,17 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
     ]
       .filter(Boolean)
       .join("\n\n");
+  };
+
+  const clearConversation = () => {
+    if (loading) return;
+    try {
+      sessionStorage.removeItem(chatStorageKey);
+    } catch {
+      // storage unavailable: resetting the state is enough
+    }
+    setMessages([{ from: "bot", text: initialMessage }]);
+    setShowMoreTopics(false);
   };
 
   const chooseSuggestion = (suggestion: SuggestionChip) => {
@@ -646,7 +652,23 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
               </button>
             </form>
 
-            <p>Orientado con documentación interna de AndesNova.</p>
+            <p>
+              Orientado con documentación interna de AndesNova. Respuestas generadas con IA (Google Gemini).
+            </p>
+            <p className="floating-chat-privacy">
+              La conversación se guarda solo en tu navegador (hasta 30 mensajes) y se borra al cerrar la pestaña.{" "}
+              <button type="button" onClick={() => onOpenLegal("data")}>
+                Cómo tratamos tus datos
+              </button>
+              {hasUserMessage ? (
+                <>
+                  {" · "}
+                  <button type="button" onClick={clearConversation} disabled={loading}>
+                    <Trash2 size={12} aria-hidden="true" /> Borrar conversación
+                  </button>
+                </>
+              ) : null}
+            </p>
           </div>
         </section>
       )}

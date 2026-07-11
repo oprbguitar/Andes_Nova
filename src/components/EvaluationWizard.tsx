@@ -13,6 +13,7 @@ import {
   sectors,
   type GeneralData,
 } from "../data/evaluation";
+import { downloadDiagnosisPdf } from "../utils/diagnosisPdf";
 
 type EvaluationWizardProps = {
   open: boolean;
@@ -77,13 +78,7 @@ export function EvaluationWizard({ open, onClose, onRequestContact }: Evaluation
         : true;
 
   const downloadDiagnosis = () => {
-    const blob = new Blob([diagnosisText + "\n"], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `diagnostico-andesnova-${general.company.trim().toLowerCase().replace(/\s+/g, "-") || "empresa"}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
+    void downloadDiagnosisPdf({ general, results, risks, recommendations, nextSteps });
   };
 
   return (
@@ -226,7 +221,8 @@ export function EvaluationWizard({ open, onClose, onRequestContact }: Evaluation
                     </ol>
                   ) : (
                     <p className="wizard-ok">
-                      <Check size={15} /> Sin riesgos prioritarios detectados: buen nivel de control general.
+                      <Check size={15} /> El cuestionario no identificó alertas prioritarias con las respuestas
+                      proporcionadas. El resultado debe validarse mediante revisión documental y entrevistas.
                     </p>
                   )}
                 </section>
@@ -254,7 +250,7 @@ export function EvaluationWizard({ open, onClose, onRequestContact }: Evaluation
                     Solicitar contacto con este diagnóstico <Mail size={18} />
                   </button>
                   <button className="contact-copy" type="button" onClick={downloadDiagnosis}>
-                    Descargar resumen <Download size={16} />
+                    Descargar informe PDF <Download size={16} />
                   </button>
                 </div>
                 <p className="wizard-disclaimer">

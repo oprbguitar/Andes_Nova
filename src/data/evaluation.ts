@@ -232,7 +232,10 @@ export function buildDiagnosisText(
     ...results.map((result) => `- ${result.title}: ${result.level} (${result.score}/${result.maxScore})`),
     "",
     "RIESGOS PRIORITARIOS",
-    ...(risks.length ? risks.map((risk, index) => `${index + 1}. ${risk}`) : ["Sin riesgos prioritarios detectados."]),
+    ...(risks.length ? risks.map((risk, index) => `${index + 1}. ${risk}`) : [
+          "El cuestionario no identificó alertas prioritarias con las respuestas proporcionadas.",
+          "El resultado debe validarse mediante revisión documental y entrevistas.",
+        ]),
     "",
     "RECOMENDACIONES",
     ...recommendations.map((item) => `- ${item}`),

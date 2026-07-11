@@ -3112,3 +3112,147 @@ input:focus-visible {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Footer legal links */
+
+.app-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.footer-legal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-legal button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #9fb6d8;
+  font-size: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(159, 182, 216, 0.45);
+}
+
+.footer-legal button:hover {
+  color: #fff;
+}
+
+/* Legal modal */
+
+.legal-modal {
+  width: min(640px, 100%);
+  max-height: min(88dvh, 780px);
+  padding: 30px 28px 24px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.legal-header {
+  margin-bottom: 8px;
+}
+
+.legal-modal h2 {
+  margin: 4px 0 12px;
+  font-size: 24px;
+}
+
+.legal-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.legal-tab {
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.legal-tab.active {
+  border-color: rgba(11, 92, 255, 0.35);
+  background: rgba(11, 92, 255, 0.09);
+  color: var(--blue);
+}
+
+.legal-body {
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-top: 8px;
+}
+
+.legal-body h3 {
+  margin: 16px 0 6px;
+  font-size: 15px;
+  color: var(--navy);
+}
+
+.legal-body h3:first-child {
+  margin-top: 4px;
+}
+
+.legal-body p {
+  margin: 0 0 10px;
+  max-width: none;
+  color: #3d4c6d;
+  font-size: 13.5px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.legal-body a {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.legal-updated {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Chat privacy notice */
+
+.floating-chat-privacy {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+
+.floating-chat-privacy button {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.floating-chat-privacy button:hover:not(:disabled) {
+  color: #fff;
+}
+
+.floating-chat-privacy button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
