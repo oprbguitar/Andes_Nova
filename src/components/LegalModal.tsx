@@ -33,7 +33,8 @@ function PrivacyContent() {
       <h3>Para qué se utilizan</h3>
       <p>
         Los datos se utilizan únicamente para generar el diagnóstico preliminar, responder tus consultas en el
-        asistente y, si lo solicitas, preparar el contacto con un especialista. No vendemos ni compartimos tus
+        asistente y, si lo solicitas, preparar el contacto con un especialista. Para entregar los formularios de
+        contacto podemos utilizar FormSubmit como proveedor técnico de correo. No vendemos ni compartimos tus
         datos con terceros con fines publicitarios.
       </p>
       <h3>Cuánto tiempo se conservan</h3>
