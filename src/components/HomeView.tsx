@@ -32,12 +32,13 @@ export function HomeView({ areas, kpis, selectedArea, onSelectArea, onStartEvalu
         <button className="primary-action" type="button" onClick={onStartEvaluation}>
           Iniciar evaluación <ArrowRight size={24} />
         </button>
+        <button className="demo-note" type="button" onClick={onStartEvaluation}>
+          <span aria-hidden="true">✦</span> El diagrama es un ejemplo ilustrativo: obtén el diagnóstico real de tu
+          empresa
+        </button>
       </div>
 
       <div className="home-visual">
-        <button className="demo-badge" type="button" onClick={onStartEvaluation}>
-          <span aria-hidden="true">✦</span> Ejemplo ilustrativo — obtén el diagnóstico real de tu empresa
-        </button>
         <svg className="connector-layer" viewBox="0 0 780 500" aria-hidden="true">
           <path className="connector green" d="M120 190 C170 300 270 120 350 295" />
           <path className="connector green" d="M70 310 C160 250 190 370 300 310" />
