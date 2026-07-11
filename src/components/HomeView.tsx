@@ -26,9 +26,9 @@ export function HomeView({ areas, kpis, selectedArea, onSelectArea, onStartEvalu
     >
       <div className="home-copy">
         <h1>
-          Entiende tu empresa de un <span>vistazo</span>
+          Consultoría empresarial para ordenar <span>procesos, documentos y decisiones</span>
         </h1>
-        <p>Ordena, revisa y decide con claridad.</p>
+        <p>Evalúa documentación, operación, riesgos y clientes para convertir problemas de gestión en acciones concretas.</p>
         <button className="primary-action" type="button" onClick={onStartEvaluation}>
           Iniciar evaluación <ArrowRight size={24} />
         </button>
