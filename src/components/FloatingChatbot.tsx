@@ -2,10 +2,13 @@ import { Check, Copy, Download, RotateCcw, Send, ThumbsDown, ThumbsUp, X } from 
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 type SourceInfo = {
+  id?: string;
+  version?: string;
   title: string;
   category?: string;
   updated?: string;
-  description?: string;
+  excerpt?: string;
+  relevanceScore?: number;
 };
 
 type MessageStatus = "offline" | "limit" | "error";
@@ -130,10 +133,13 @@ function normalizeSources(raw: unknown): SourceInfo[] | undefined {
       if (item && typeof item === "object" && typeof (item as SourceInfo).title === "string") {
         const source = item as SourceInfo;
         return {
+          id: typeof source.id === "string" ? source.id : undefined,
+          version: typeof source.version === "string" ? source.version : undefined,
           title: source.title,
           category: typeof source.category === "string" ? source.category : undefined,
           updated: typeof source.updated === "string" ? source.updated : undefined,
-          description: typeof source.description === "string" ? source.description : undefined,
+          excerpt: typeof source.excerpt === "string" ? source.excerpt : undefined,
+          relevanceScore: typeof source.relevanceScore === "number" ? source.relevanceScore : undefined,
         };
       }
 
@@ -364,10 +370,10 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
         throw new Error(`Chat request failed with ${response.status}`);
       }
 
-      const data = (await response.json()) as { answer?: unknown; sources?: unknown };
+      const data = (await response.json()) as { answer?: unknown; evidence?: unknown };
       const answer = typeof data.answer === "string" && data.answer.trim() ? data.answer : errorMessage;
 
-      replaceLoading({ from: "bot", text: answer, kind: "answer", sources: normalizeSources(data.sources) });
+      replaceLoading({ from: "bot", text: answer, kind: "answer", sources: normalizeSources(data.evidence) });
     } catch (error) {
       const offline =
         (typeof navigator !== "undefined" && !navigator.onLine) || error instanceof TypeError;
@@ -408,7 +414,7 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
 
   const downloadAnswer = (target: Message) => {
     const sourceLines = target.sources?.length
-      ? `\n\nBasado en: ${target.sources.map((source) => source.title).join(", ")}`
+      ? `\n\nEvidencia documental: ${target.sources.map((source) => `${source.title}${source.id ? ` [${source.id}]` : ""}`).join(", ")}`
       : "";
     const blob = new Blob([`Recomendación AndesNova IA+\n\n${target.text}${sourceLines}\n`], {
       type: "text/plain;charset=utf-8",
@@ -518,15 +524,15 @@ export function FloatingChatbot({ onRequestContact }: FloatingChatbotProps) {
                   ) : null}
                   {message.from === "bot" && message.sources?.length ? (
                     <span className="floating-chat-sources">
-                      <span className="floating-chat-sources-label">Basado en:</span>
+                      <span className="floating-chat-sources-label">Evidencia documental utilizada:</span>
                       {message.sources.map((source) => (
-                        <details className="floating-chat-source" key={source.title}>
+                        <details className="floating-chat-source" key={source.id || source.title}>
                           <summary>
                             {source.title}
-                            {source.updated ? <small>{source.updated}</small> : null}
+                            {source.version ? <small>v{source.version}</small> : source.updated ? <small>{source.updated}</small> : null}
                           </summary>
-                          {source.category ? <em>{source.category}</em> : null}
-                          {source.description ? <p>{source.description}</p> : null}
+                          {source.category ? <em>{source.category}{source.id ? ` · ${source.id}` : ""}</em> : null}
+                          {source.excerpt ? <p>“{source.excerpt}”</p> : null}
                         </details>
                       ))}
                     </span>

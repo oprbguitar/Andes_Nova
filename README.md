@@ -6,7 +6,7 @@ Portal corporativo de AndesNova, construido con React, Vite, TypeScript, Framer 
 
 Sitio publicado: [https://oprbguitar.github.io/Andes_Nova/](https://oprbguitar.github.io/Andes_Nova/)
 
-La publicación se realiza con GitHub Actions mediante `.github/workflows/pages.yml`. Cada push a `main` compila el proyecto con Vite y publica el contenido de `dist` en la rama `gh-pages`.
+La publicación se realiza con GitHub Actions mediante `.github/workflows/pages.yml`. Cada push a `main` ejecuta `npm run build:github` y publica el artefacto `docs/` con GitHub Pages.
 
 ## Características
 
@@ -30,6 +30,7 @@ npm run dev
 npm run build
 npm run build:github
 npm run preview
+npm run typecheck
 ```
 
 Use `npm run build` para Vercel y `npm run build:github` para GitHub Pages.
