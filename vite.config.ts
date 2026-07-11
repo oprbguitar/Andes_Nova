@@ -4,8 +4,10 @@ import react from "@vitejs/plugin-react";
 // GitHub Pages serves from /Andes_Nova/; Vercel serves from the domain root.
 const isVercel = Boolean(process.env.VERCEL);
 const base = isVercel ? "/" : "/Andes_Nova/";
-// El dominio en Vercel tiene www como Production; el apex redirige 308 a www.
-const siteUrl = isVercel ? "https://www.andesnova.solutions/" : "https://oprbguitar.github.io/Andes_Nova/";
+// Canonical único en el dominio propio (www es Production en Vercel; el apex
+// redirige 308). GitHub Pages es un espejo y también declara este canonical
+// para no competir como contenido duplicado en buscadores.
+const siteUrl = "https://www.andesnova.solutions/";
 
 function seoFiles(): Plugin {
   const lastmod = new Date().toISOString().slice(0, 10);
