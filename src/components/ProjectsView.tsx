@@ -15,7 +15,6 @@ import {
   ShieldCheck,
   Sparkles,
   Telescope,
-  Truck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ComponentType } from "react";
@@ -37,7 +36,7 @@ const projects: Project[] = [
   { number: "02", name: "JustiPenal", category: "Gestión Legal", tone: "green", icon: Scale, detailIcon: Landmark, url: "https://justipenal.andesnova.solutions/" },
   { number: "03", name: "Radar SUNAT", category: "Riesgos", tone: "orange", icon: Radar, detailIcon: BarChart3 },
   { number: "04", name: "IPERC Matriz", category: "Seguridad Laboral", tone: "violet", icon: ClipboardCheck, detailIcon: CheckSquare2 },
-  { number: "05", name: "SupplyChain", category: "Cadena de Suministro", tone: "cyan", icon: Truck, detailIcon: MapPinned },
+  { number: "05", name: "Visor Presupuesto Peru", category: "Presupuesto Público", tone: "cyan", icon: BarChart3, detailIcon: Landmark, url: "https://oprbguitar.github.io/presupuesto/" },
   { number: "06", name: "EvidenciaPro", category: "Evidencias", tone: "gold", icon: ShieldCheck, detailIcon: PackageCheck },
   { number: "07", name: "Observatorio IA", category: "Tendencias", tone: "coral", icon: Telescope, detailIcon: BarChart3, url: "https://oprbguitar.github.io/amaru/" },
   { number: "08", name: "Gestor Docs", category: "Documentos", tone: "blue", icon: FolderOpen, detailIcon: FileText },
@@ -64,7 +63,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <ProjectArtwork project={project} />
       <span className="project-card-copy">
         <strong className="project-number">{project.number}</strong>
-        <span className="project-name">{project.name}</span>
+        <span className={`project-name ${project.name.length > 18 ? "project-name-long" : ""}`}>{project.name}</span>
         <span className="project-meta">
           <span className="project-category">{project.category}</span>
           {!project.url ? <span className="project-coming">Próximamente</span> : null}
