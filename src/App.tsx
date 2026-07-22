@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "./components/Header";
+import { AppFooter } from "./components/AppFooter";
 import { FloatingChatbot } from "./components/FloatingChatbot";
 import { HomeView } from "./components/HomeView";
+import { ProjectsView } from "./components/ProjectsView";
 import { ContactModal } from "./components/ContactModal";
 import { EvaluationWizard } from "./components/EvaluationWizard";
 import { LegalModal, type LegalSection } from "./components/LegalModal";
@@ -16,6 +18,12 @@ export default function App() {
   const [wizardOpen, setWizardOpen] = useState(false);
   const [legalSection, setLegalSection] = useState<LegalSection | null>(null);
   const selectedArea = data.areas.find((area) => area.id === selectedAreaId);
+  const isProjectsPage = /\/proyectos\/?$/.test(window.location.pathname);
+
+  useEffect(() => {
+    document.body.classList.toggle("portfolio-route", isProjectsPage);
+    return () => document.body.classList.remove("portfolio-route");
+  }, [isProjectsPage]);
 
   function openContact(summary?: string) {
     setContactSummary(summary);
@@ -23,32 +31,21 @@ export default function App() {
   }
 
   return (
-    <main className="page-shell">
+    <div className={`page-shell ${isProjectsPage ? "portfolio-shell" : ""}`}>
       <div className="app-card">
-        <Header companyName={data.companyName} contact={data.contact} />
-        <HomeView
-          areas={data.areas}
-          kpis={data.kpis}
-          selectedArea={selectedArea}
-          onSelectArea={setSelectedAreaId}
-          onStartEvaluation={() => setWizardOpen(true)}
-        />
-        <footer className="app-footer">
-          <span>
-            Atención de proyectos previa evaluación. Los servicios especializados pueden desarrollarse mediante profesionales y empresas colaboradoras.
-          </span>
-          <nav className="footer-legal" aria-label="Información legal">
-            <button type="button" onClick={() => setLegalSection("privacy")}>
-              Política de privacidad
-            </button>
-            <button type="button" onClick={() => setLegalSection("terms")}>
-              Términos de uso
-            </button>
-            <button type="button" onClick={() => setLegalSection("data")}>
-              Tratamiento de datos
-            </button>
-          </nav>
-        </footer>
+        <Header companyName={data.companyName} contact={data.contact} currentPage={isProjectsPage ? "projects" : "home"} />
+        {isProjectsPage ? (
+          <ProjectsView />
+        ) : (
+          <HomeView
+            areas={data.areas}
+            kpis={data.kpis}
+            selectedArea={selectedArea}
+            onSelectArea={setSelectedAreaId}
+            onStartEvaluation={() => setWizardOpen(true)}
+          />
+        )}
+        <AppFooter onOpenLegal={setLegalSection} />
       </div>
       <EvaluationWizard
         open={wizardOpen}
@@ -70,6 +67,6 @@ export default function App() {
         onRequestContact={openContact}
         onOpenLegal={(section) => setLegalSection(section)}
       />
-    </main>
+    </div>
   );
 }
