@@ -34,7 +34,7 @@ type Project = {
 const projects: Project[] = [
   { number: "01", name: "Archiv-IA", category: "Clasificación", tone: "blue", icon: FolderArchive, detailIcon: FileText },
   { number: "02", name: "JustiPenal", category: "Gestión Legal", tone: "green", icon: Scale, detailIcon: Landmark, url: "https://justipenal.andesnova.solutions/" },
-  { number: "03", name: "Radar SUNAT", category: "Riesgos", tone: "orange", icon: Radar, detailIcon: BarChart3 },
+  { number: "03", name: "Radar Norma Watch", category: "Monitoreo Normativo", tone: "orange", icon: Radar, detailIcon: FileText, url: "https://oprbguitar.github.io/Norma-watch/" },
   { number: "04", name: "IPERC Matriz", category: "Seguridad Laboral", tone: "violet", icon: ClipboardCheck, detailIcon: CheckSquare2 },
   { number: "05", name: "Visor Presupuesto Peru", category: "Presupuesto Público", tone: "cyan", icon: BarChart3, detailIcon: Landmark, url: "https://oprbguitar.github.io/presupuesto/" },
   { number: "06", name: "EvidenciaPro", category: "Evidencias", tone: "gold", icon: ShieldCheck, detailIcon: PackageCheck },
