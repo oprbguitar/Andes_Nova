@@ -41,6 +41,7 @@ const projects: Project[] = [
   { number: "07", name: "Observatorio IA", category: "Tendencias", tone: "coral", icon: Telescope, detailIcon: BarChart3, url: "https://oprbguitar.github.io/amaru/" },
   { number: "08", name: "Gestor Docs", category: "Documentos", tone: "blue", icon: FolderOpen, detailIcon: FileText },
   { number: "09", name: "Atlas Territorial", category: "Geoespacial", tone: "green", icon: Map, detailIcon: MapPinned },
+  { number: "10", name: "Radar Perú IA", category: "Inteligencia Pública", tone: "orange", icon: Radar, detailIcon: BarChart3, url: "https://oprbguitar.github.io/RadarIA/" },
 ];
 
 function ProjectArtwork({ project }: { project: Project }) {
