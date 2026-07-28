@@ -44,6 +44,7 @@ const floatingMessages = [
   "¿Te ayudo con algo?",
   "Consulta gratis aquí 💬",
   "¿Buscas una ruta clara?",
+  "Te oriento según nuestros proyectos.",
   "Tu evaluación puede empezar hoy 🚀",
   "¿Dudas? Escríbeme",
   "Pregúntame por documentación, riesgos u operaciones.",
@@ -52,6 +53,7 @@ const floatingMessages = [
 
 const chatEndpoint = "https://andesnova-chat-api.vercel.app/api/chat";
 const healthEndpoint = "https://andesnova-chat-api.vercel.app/api/health";
+const projectsUrl = `${import.meta.env.BASE_URL}proyectos/`;
 
 const serviceStatusLabels: Record<ServiceStatus, string> = {
   checking: "Comprobando servicio",
@@ -62,8 +64,8 @@ const serviceStatusLabels: Record<ServiceStatus, string> = {
 
 const primarySuggestions: SuggestionChip[] = [
   {
-    label: "Chatbot documental",
-    message: "Quiero un chatbot documental para consultar archivos internos. ¿Qué pasos recomienda?",
+    label: "Encontrar un proyecto",
+    message: "Quiero conocer los proyectos de AndesNova y saber cuál se relaciona mejor con mi necesidad.",
   },
   {
     label: "Capacitación",
@@ -76,6 +78,10 @@ const primarySuggestions: SuggestionChip[] = [
 ];
 
 const moreSuggestions: SuggestionChip[] = [
+  {
+    label: "Chatbot documental",
+    message: "Quiero un chatbot documental para consultar archivos internos. ¿Qué pasos recomienda?",
+  },
   {
     label: "Ordenar documentos",
     message: "Quiero ordenar los documentos de mi empresa. ¿Por dónde debería empezar?",
@@ -99,7 +105,7 @@ const moreSuggestions: SuggestionChip[] = [
 ];
 
 const initialMessage =
-  "Hola, soy AndesNova IA+. Puedo orientarte sobre documentos, contratos, procesos, SST, logística, reportes o soluciones con IA. Cuéntame brevemente qué necesitas resolver.";
+  "Hola, soy AndesNova IA+. Puedo orientarte hacia los proyectos del portafolio según lo que necesitas. Para una consulta adicional, también puedes escribir a consultas@andesnova.solutions. Las preguntas complejas se analizan con IA avanzada.";
 
 const loadingMessage = "Procesando consulta";
 
@@ -622,6 +628,9 @@ export function FloatingChatbot({ onRequestContact, onOpenLegal }: FloatingChatb
 
           <div className="floating-chat-composer">
             <div className="floating-chat-actions">
+              <a href={projectsUrl} className="floating-chat-action">
+                Ver proyectos
+              </a>
               <button
                 type="button"
                 onClick={() => onRequestContact(buildCaseSummary())}

@@ -2058,6 +2058,9 @@ a.project-card:focus-visible .project-arrow {
 }
 
 .floating-chat-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 32px;
   padding: 0 12px;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -2066,6 +2069,7 @@ a.project-card:focus-visible .project-arrow {
   background: transparent;
   font-size: 12px;
   font-weight: 800;
+  text-decoration: none;
 }
 
 .floating-chat-action:hover,
