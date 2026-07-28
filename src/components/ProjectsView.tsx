@@ -12,7 +12,6 @@ import {
   PackageCheck,
   Radar,
   Scale,
-  ShieldCheck,
   Sparkles,
   Telescope,
 } from "lucide-react";
@@ -37,7 +36,7 @@ const projects: Project[] = [
   { number: "03", name: "Radar Norma Watch", category: "Monitoreo Normativo", tone: "orange", icon: Radar, detailIcon: FileText, url: "https://oprbguitar.github.io/Norma-watch/" },
   { number: "04", name: "Matriz IPERC Digital", category: "Riesgos y SST", tone: "violet", icon: ClipboardCheck, detailIcon: CheckSquare2, url: "https://oprbguitar.github.io/IPERC-Matriz/" },
   { number: "05", name: "Visor Presupuesto Peru", category: "Presupuesto Público", tone: "cyan", icon: BarChart3, detailIcon: Landmark, url: "https://oprbguitar.github.io/presupuesto/" },
-  { number: "06", name: "EvidenciaPro", category: "Evidencias", tone: "gold", icon: ShieldCheck, detailIcon: PackageCheck },
+  { number: "06", name: "ERP Express Perú", category: "Gestión Empresarial", tone: "gold", icon: PackageCheck, detailIcon: ClipboardCheck, url: "https://oprbguitar.github.io/myerpexpressperu/#descarga" },
   { number: "07", name: "Observatorio IA", category: "Tendencias", tone: "coral", icon: Telescope, detailIcon: BarChart3, url: "https://oprbguitar.github.io/amaru/" },
   { number: "08", name: "Gestor Docs", category: "Documentos", tone: "blue", icon: FolderOpen, detailIcon: FileText },
   { number: "09", name: "Atlas Territorial", category: "Geoespacial", tone: "green", icon: Map, detailIcon: MapPinned },
