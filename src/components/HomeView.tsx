@@ -54,7 +54,11 @@ export function HomeView({ areas, kpis, selectedArea, onSelectArea, onStartEvalu
 
       <div className="home-copy">
         <h1>
-          Ordena tus <span>procesos, documentos y decisiones</span>
+          Ordena tus{" "}
+          <span>
+            <span className="headline-keep">procesos, documentos</span>{" "}
+            <span className="headline-tail">y decisiones</span>
+          </span>
         </h1>
         <p>Evalúa documentación, operación, riesgos y clientes para convertir problemas de gestión en acciones concretas.</p>
         <button className="primary-action" type="button" onClick={onStartEvaluation}>
