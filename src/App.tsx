@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { CSSProperties } from "react";
 import { Header } from "./components/Header";
 import { AppFooter } from "./components/AppFooter";
 import { FloatingChatbot } from "./components/FloatingChatbot";
@@ -19,6 +20,7 @@ export default function App() {
   const [legalSection, setLegalSection] = useState<LegalSection | null>(null);
   const selectedArea = data.areas.find((area) => area.id === selectedAreaId);
   const isProjectsPage = /\/proyectos\/?$/.test(window.location.pathname);
+  const projectsBackground = `${import.meta.env.BASE_URL}assets/projects/projects-background.png`;
 
   useEffect(() => {
     document.body.classList.toggle("portfolio-route", isProjectsPage);
@@ -31,8 +33,11 @@ export default function App() {
   }
 
   return (
-    <div className={`page-shell ${isProjectsPage ? "portfolio-shell" : ""}`}>
-      <div className="app-card">
+    <div
+      className={`page-shell ${isProjectsPage ? "portfolio-shell" : "home-shell"}`}
+      style={isProjectsPage ? ({ "--projects-background": `url("${projectsBackground}")` } as CSSProperties) : undefined}
+    >
+      <div className={`app-card ${isProjectsPage ? "" : "home-card"}`}>
         <Header companyName={data.companyName} contact={data.contact} currentPage={isProjectsPage ? "projects" : "home"} />
         {isProjectsPage ? (
           <ProjectsView />

@@ -16,7 +16,7 @@ import {
   Telescope,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import type { ComponentType } from "react";
+import type { ComponentType, CSSProperties } from "react";
 
 type ProjectTone = "blue" | "green" | "orange" | "violet" | "cyan" | "gold" | "coral";
 
@@ -61,8 +61,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     <>
       <ProjectArtwork project={project} />
       <span className="project-card-copy">
-        <strong className="project-number">{project.number}</strong>
-        <span className={`project-name ${project.name.length > 18 ? "project-name-long" : ""}`}>{project.name}</span>
+        <span className="project-card-head">
+          <strong className="project-number">{project.number}</strong>
+          <span className={`project-name ${project.name.length > 18 ? "project-name-long" : ""}`}>{project.name}</span>
+        </span>
         <span className="project-meta">
           <span className="project-category">{project.category}</span>
           {!project.url ? <span className="project-coming">Próximamente</span> : null}
@@ -101,10 +103,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export function ProjectsView() {
+  const backgroundUrl = `${import.meta.env.BASE_URL}assets/projects/projects-background.png`;
+
   return (
     <motion.main
       className="projects-screen"
       id="portafolio"
+      style={{ "--projects-background": `url("${backgroundUrl}")` } as CSSProperties}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.24 }}

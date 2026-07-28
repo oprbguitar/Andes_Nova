@@ -10,18 +10,30 @@ export function Header({ companyName, contact, currentPage = "home" }: HeaderPro
   const baseUrl = import.meta.env.BASE_URL;
   const homeHref = baseUrl;
   const projectsHref = `${baseUrl}proyectos/`;
+  const isHome = currentPage === "home";
 
   return (
-    <header className="app-header">
+    <header className={`app-header ${isHome ? "home-header" : ""}`}>
       <a className="brand" href={currentPage === "home" ? "#inicio" : homeHref} aria-label="Ir a la página de inicio">
-        <span className="brand-mark" aria-hidden="true">
-          <span />
-        </span>
-        <span className="brand-copy">
-          <strong>{companyName}</strong>
-          <span aria-hidden="true">|</span>
-          <em>Soluciones de gestión e inteligencia documental</em>
-        </span>
+        {isHome || currentPage === "projects" ? (
+          <span className={`brand-logo-frame ${currentPage === "projects" ? "project-brand-logo-frame" : ""}`}>
+            <img
+              src={`${baseUrl}assets/${currentPage === "projects" ? "projects/andesnova-logo-projects.png" : "home/andesnova-logo-header.png"}`}
+              alt="AndesNova, soluciones de gestión e inteligencia documental"
+            />
+          </span>
+        ) : (
+          <>
+            <span className="brand-mark" aria-hidden="true">
+              <span />
+            </span>
+            <span className="brand-copy">
+              <strong>{companyName}</strong>
+              <span aria-hidden="true">|</span>
+              <em>Soluciones de gestión e inteligencia documental</em>
+            </span>
+          </>
+        )}
       </a>
 
       <div className="header-actions">
